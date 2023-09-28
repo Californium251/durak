@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { CardType } from "@/components/Card";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { HandType } from "@/components/Hand";
@@ -9,9 +8,9 @@ const playersSlice = createSlice({
     name: 'hand',
     initialState,
     reducers: {
-        createPlayer: (state) => {
+        createPlayer: (state, action: PayloadAction<string>) => {
             state.push({
-                playerId: _.uniqueId(),
+                playerId: action.payload,
                 cards: []
             });
         },
