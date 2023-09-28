@@ -5,10 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { CardType } from "./Card";
 import { RootState } from "../slices/index";
 import { addCardToBeat } from "../slices/gameSlice";
-import { makeTurn } from "../slices/handSlice";
+import { makeTurn } from "../slices/playersSlice";
 
-const Hand: FC = () => {
-    const cards: CardType[] = useSelector((state: RootState) => state.handSlice);
+export type HandType = {
+    playerId: string,
+    cards: CardType[],
+}
+
+const Hand: FC<{ id: string }> = ({ id }) => {
+    const cards: CardType[] = useSelector((state: RootState) => state.playersSlice);
     const dispatch = useDispatch();
     const onClick = (card: CardType) => () => {
         dispatch(addCardToBeat(card));

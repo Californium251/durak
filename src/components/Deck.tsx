@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { drawCard } from "../slices/handSlice";
+import { drawCard } from "../slices/playersSlice";
 import { shuffle, removeTopCard, getTrump, setTrumpDrawn } from "../slices/deckSlice";
 import { RootState } from "../slices/index";
 import Card from "./Card";
