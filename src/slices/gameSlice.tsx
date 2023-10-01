@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import * as _ from "lodash";
 import { CardType } from "@/components/Card";
 import { RootState } from "./index";
 import { PlayerType } from "@/components/Player";
@@ -40,14 +41,20 @@ const gameSlice = createSlice({
         makeTurn: (state, action: PayloadAction<CardType>) => {
             const { cardsOnTable, players, activePlayerId } = state;
             const card = action.payload;
-            if (cardsOnTable) {
-                cardsOnTable.push([card]);
+            const checkIfCardsAppropriate = (card: CardType, cardsOnTable: Array<Array<CardType>>) => {
+                if (cardsOnTable.length === 0) {
+                    return true;
+                }
+                return _.flatten(cardsOnTable).map((c) => c.rank).includes(card.rank);
             }
-            const activePlayer = players.find((p) => p.playerId === activePlayerId);
-            if (activePlayer) {
-                activePlayer?.cards.splice(
-                    activePlayer.cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit), 1
-                );
+            if (cardsOnTable && checkIfCardsAppropriate(card, cardsOnTable)) {
+                cardsOnTable.push([card]);
+                const activePlayer = players.find((p) => p.playerId === activePlayerId);
+                if (activePlayer) {
+                    activePlayer?.cards.splice(
+                        activePlayer.cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit), 1
+                    );
+                }
             }
         },
         addCardToBuffer: (state, action: PayloadAction<CardType>) => {
