@@ -1,10 +1,10 @@
 'use client'
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import * as _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/slices";
 import Board from "./Board";
-import { initializeGame } from "@/slices/gameSlice";
+import { initializeGame, endGame } from "@/slices/gameSlice";
 import { CardType } from "./Card";
 import { PlayerType } from "./Player";
 
@@ -72,6 +72,22 @@ const createPlayers: (n: number, cards: Array<CardType>) => Array<PlayerType> = 
 const getFirstPlayerId: (p: PlayerType[]) => string = (players) => players.map((p) => p.playerId)[Math.floor(Math.random()*players.length)]
 
 const WelcomeScreen: FC = () => {
+    const playersCards = useSelector((state: RootState) => state.gameSlice.players).map((player) => player.cards);
+    const deck = useSelector((state: RootState) => state.gameSlice.cards);
+    const trumpDrawn = useSelector((state: RootState) => state.gameSlice.trumpDrawn);
+    const cardsOnTable = useSelector((state: RootState) => state.gameSlice.cardsOnTable);
+    useEffect(() => {
+        const numberOfPlayersWithoutCards = playersCards.reduce((acc, hand) => {
+            if (hand.length === 0) {
+                acc += 1;
+            }
+            return acc;
+        }, 0);
+        const isGameOver = numberOfPlayersWithoutCards + 1 === playersCards.length && deck.length === 0 && trumpDrawn && cardsOnTable.length === 0;
+        if (isGameOver) {
+            dispatch(endGame());
+        }
+    }, [...playersCards]);
     const dispatch = useDispatch();
     const gameStarted: boolean = useSelector((state: RootState) => state.gameSlice.gameStarted);
     const onClick = (val: number) => () => {
@@ -81,6 +97,7 @@ const WelcomeScreen: FC = () => {
             cards: deck,
             trump: setTrump(deck),
             players: players,
+            playersPassed: [],
             activePlayerId: getFirstPlayerId(players),
             gameStarted: true,
             cardsOnTable: [],
@@ -98,7 +115,7 @@ const WelcomeScreen: FC = () => {
             }}
         >
             <h1>Choose number of Players</h1>
-            {[1,2,3,4,5].map((el, i) => (
+            {[2,3,4,5].map((el, i) => (
                 <button
                     type="button"
                     key={i}
