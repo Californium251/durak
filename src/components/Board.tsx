@@ -1,30 +1,17 @@
 'use client'
 import { FC, useEffect } from "react";
 import * as _ from "lodash";
-import Hand from "./Hand";
 import Deck from "./Deck";
-import CardsToBeBeat from "./CardsToBeBeat";
+import CardsOnTable from "./CardsOnTable";
 import { useDispatch, useSelector } from "react-redux";
+import Player from "./Player";
 import { RootState } from "@/slices";
-import { createPlayer, drawCard } from "@/slices/playersSlice";
-import { CardType } from "./Card";
-import { setNumberOfPlayers } from "@/slices/gameSlice";
 
 
 const Board: FC = () => {
     const dispatch = useDispatch();
-    const players = useSelector((state: RootState) => state.playersSlice);
-    const cards = useSelector((state: RootState) => state.deckSlice.cards);
-    useEffect(() => {
-        players.forEach((p) => {
-            for (let i = 1; i <= 6; i += 1) {
-                dispatch(drawCard({
-                    playerId: p.playerId,
-                    card: cards.at(-1) as CardType,
-                }));
-            }
-        })
-    }, [])
+    const activePlayerId = useSelector((state: RootState) => state.gameSlice.activePlayerId);
+    const players = useSelector((state: RootState) => state.gameSlice.players);
     return (
         <div style={{
             width: '100%',
@@ -35,9 +22,16 @@ const Board: FC = () => {
             justifyContent: 'space-between',
             alignItems: 'center',
         }}>
-            <Deck />
-            <CardsToBeBeat />
-            {players.map(({ playerId }, i) => <Hand id={playerId} key={i} />)}
+            <div style={{
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+            }}>
+                <Deck />
+                {players.filter((p) => p.playerId !== activePlayerId).map((p, i) => <Player key={i} playerId={p.playerId} /> )}
+            </div>
+            <CardsOnTable />
+            <Player playerId={activePlayerId as string}  />
         </div>
     )
 }

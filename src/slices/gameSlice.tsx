@@ -1,38 +1,98 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { CardType } from "@/components/Card";
+import { RootState } from "./index";
 import { PlayerType } from "@/components/Player";
 
 const initialState: {
-    playersTurn: number,
-    numberOfPlayers: number,
-    cardsToBeat: Array<CardType>,
+    cards: Array<CardType>,
+    trump: CardType,
+    players: PlayerType[],
+    activePlayerId?: string,
+    trumpDrawn?: boolean,
+    cardsOnTable: Array<Array<CardType>>,
     gameStarted: boolean,
+    cardBuffer?: CardType,
 } = {
-    playersTurn: 0,
-    numberOfPlayers: 0,
-    cardsToBeat: [],
+    cards: [],
+    trump: { suit: '', rank: '' },
+    trumpDrawn: false,
+    players: [],
+    cardsOnTable: [],
     gameStarted: false,
+    cardBuffer: { suit: '', rank: '' },
 };
 
 const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        changePlayersTurn: (state, action: PayloadAction<number>) => {
-            state.playersTurn = action.payload;
+        initializeGame: (state, action: PayloadAction<typeof initialState>) => {
+            const { cards, trump, players, activePlayerId } = action.payload;
+            state.cards = cards;
+            state.trump = trump;
+            state.players = players;
+            state.activePlayerId = activePlayerId;
+            state.gameStarted = true;
         },
-        addCardToBeat: (state, action: PayloadAction<CardType>) => {
-            state.cardsToBeat.push(action.payload);
+        setActivePlayer: (state, action: PayloadAction<string>) => {
+            state.activePlayerId = action.payload;
         },
-        setNumberOfPlayers: (state, action: PayloadAction<number>) => {
-            state.numberOfPlayers = action.payload;
+        makeTurn: (state, action: PayloadAction<CardType>) => {
+            const { cardsOnTable, players, activePlayerId } = state;
+            const card = action.payload;
+            if (cardsOnTable) {
+                cardsOnTable.push([card]);
+            }
+            const activePlayer = players.find((p) => p.playerId === activePlayerId);
+            if (activePlayer) {
+                activePlayer?.cards.splice(
+                    activePlayer.cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit), 1
+                );
+            }
         },
-        changeGameStatus: (state, action: PayloadAction<boolean>) => {
-            state.gameStarted = action.payload;
+        addCardToBuffer: (state, action: PayloadAction<CardType>) => {
+            state.cardBuffer = action.payload;
         },
+        beatCard: (state, action: PayloadAction<CardType>) => {
+            const cardBuffer = state.cardBuffer as CardType;
+            const trump = state.trump;
+            const checkIfCardBeats = (card1: CardType, card2: CardType) => {
+                if (card2.suit === trump.suit && card1.suit !== trump.suit) {
+                    return true;
+                }
+                const ranks = {
+                    six: 6,
+                    seven: 7,
+                    eight: 8,
+                    nine: 9,
+                    ten: 10,
+                    jack: 11,
+                    queen: 12,
+                    king: 13,
+                    ace: 14,
+                };
+                if (card2.suit === card1.suit && ranks[card1.rank] < ranks[card2.rank]) {
+                    return true;
+                }
+                return false;
+            }
+            if (checkIfCardBeats(action.payload, cardBuffer)) {
+                const cardPair = state.cardsOnTable.find((cardPair) => cardPair[0].rank === action.payload.rank && cardPair[0].suit === action.payload.suit);
+                if (cardPair) {
+                    cardPair[1] = cardBuffer;
+                    const indexOfActivePlayer = state.players.findIndex((p) => p.playerId === state.activePlayerId);
+                    const indexOfDefendingPlayer = indexOfActivePlayer + 1 === state.players.length ? 0 : indexOfActivePlayer + 1;
+                    const defendingPlayerHand = state.players[indexOfDefendingPlayer].cards;
+                    const indexOfCardToRemove = defendingPlayerHand
+                        .findIndex((c) => c.suit === cardBuffer.suit && c.rank === cardBuffer.rank);
+                    defendingPlayerHand.splice(indexOfCardToRemove, 1);
+                }
+                
+            }
+        }
     }
 });
 
-export const { changePlayersTurn, addCardToBeat, setNumberOfPlayers, changeGameStatus } = gameSlice.actions;
+export const { initializeGame, makeTurn, addCardToBuffer, beatCard } = gameSlice.actions;
 
 export default gameSlice.reducer;
