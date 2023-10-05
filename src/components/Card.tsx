@@ -5,7 +5,7 @@ export type CardType = {
     suit: string,
     rank: string,
     onClick?: () => void,
-}
+} | null;
 
 const Card: FC<PropsWithChildren<CardType>> = ({ suit, rank, onClick = () => {} }) => {
     return (

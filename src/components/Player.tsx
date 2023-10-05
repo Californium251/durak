@@ -1,17 +1,22 @@
 'use client'
-import { FC, useState } from "react";
+import { FC, SetStateAction, Dispatch, useEffect } from "react";
 import Card from "./Card";
 import { useSelector, useDispatch } from "react-redux";
 import { CardType } from "./Card";
 import { RootState } from "../slices/index";
 import { makeTurn, addCardToBuffer } from "@/slices/gameSlice";
+import { CardBufferType } from "./Board";
 
 export type PlayerType = {
     playerId: string,
     cards: CardType[],
 }
 
-const Player: FC<{ playerId: string }> = ({ playerId }) => {
+const Player: FC<{ 
+    playerId: string, 
+    cardBuffer: CardBufferType, 
+    setCardBuffer: Dispatch<SetStateAction<CardBufferType>> 
+}> = ({ playerId, cardBuffer, setCardBuffer }) => {
     const dispatch = useDispatch();
     const player: PlayerType = useSelector((state: RootState) => state.gameSlice.players.find((p) => p.playerId === playerId)) as PlayerType;
     const activePlayerId = useSelector((state: RootState) => state.gameSlice.activePlayerId);
@@ -22,15 +27,14 @@ const Player: FC<{ playerId: string }> = ({ playerId }) => {
         }
         return state.gameSlice.players[activeIndex + 1];
     });
-    const cardBuffer = useSelector((state: RootState) => state.gameSlice.cardBuffer);
     const onClick = (card: CardType) => () => {
         if (playerId === activePlayerId) {
             dispatch(makeTurn(card));
         }
         if (playerId === defendingPlayer.playerId) {
-            dispatch(addCardToBuffer(card));
+            setCardBuffer({ playerId, card });
         }
-    }
+    };
     return (
         <div
             style={{

@@ -14,7 +14,6 @@ const initialState: {
     trumpDrawn?: boolean,
     cardsOnTable: Array<Array<CardType>>,
     gameStarted: boolean,
-    cardBuffer?: CardType,
 } = {
     cards: [],
     trump: { suit: '', rank: '' },
@@ -23,7 +22,6 @@ const initialState: {
     playersPassed: [],
     cardsOnTable: [],
     gameStarted: false,
-    cardBuffer: { suit: '', rank: '' },
 };
 
 const gameSlice = createSlice({
@@ -45,31 +43,41 @@ const gameSlice = createSlice({
                 if (cardsOnTable.length === 0) {
                     return true;
                 }
-                return _.flatten(cardsOnTable).map((c) => c.rank).includes(card.rank);
+                return _.flatten(cardsOnTable).map((c) => c ? c.rank : null).includes(card ? card.rank : null);
             }
             if (cardsOnTable && checkIfCardsAppropriate(card, cardsOnTable)) {
                 cardsOnTable.push([card]);
                 const activePlayer = players.find((p) => p.playerId === activePlayerId);
                 if (activePlayer) {
                     activePlayer?.cards.splice(
-                        activePlayer.cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit), 1
+                        activePlayer.cards.findIndex((c) => {
+                            if (c && card) {
+                                return c.rank === card.rank && c.suit === card.suit;
+                            }
+                        }), 1
                     );
                 }
             }
         },
-        addCardToBuffer: (state, action: PayloadAction<CardType>) => {
-            state.cardBuffer = action.payload;
-        },
-        beatCard: (state, action: PayloadAction<CardType>) => {
-            const cardBuffer = state.cardBuffer as CardType;
+        beatCard: (state, action: PayloadAction<{ card1: CardType, card2: CardType }>) => {
+            const { card1, card2 } = action.payload;
             const trump = state.trump;
-            if (checkIfCardBeats(action.payload, cardBuffer, trump)) {
-                const cardPair = state.cardsOnTable.find((cardPair) => cardPair[0].rank === action.payload.rank && cardPair[0].suit === action.payload.suit);
+            if (checkIfCardBeats(card1, card2, trump)) {
+                const cardPair = state.cardsOnTable.find((cardPair) => {
+                    if (card1 && cardPair[0]) {
+                        return cardPair[0].rank === card1.rank && cardPair[0].suit === card1.suit;
+                    }
+                });
+                console.log(cardPair);
                 if (cardPair) {
-                    cardPair[1] = cardBuffer;
+                    cardPair[1] = card2;
                     const defendingPlayerHand = getDefendingPlayer(state).cards;
                     const indexOfCardToRemove = defendingPlayerHand
-                        .findIndex((c: CardType) => c.suit === cardBuffer.suit && c.rank === cardBuffer.rank);
+                        .findIndex((c: CardType) => {
+                            if (c && card2) {
+                                return c.suit === card2.suit && c.rank === card2.rank;
+                            }
+                        });
                     defendingPlayerHand.splice(indexOfCardToRemove, 1);
                 }
                 
@@ -106,6 +114,6 @@ const gameSlice = createSlice({
     }
 });
 
-export const { initializeGame, makeTurn, addCardToBuffer, beatCard, drawCards, endTurn, endGame } = gameSlice.actions;
+export const { initializeGame, makeTurn, beatCard, drawCards, endTurn, endGame } = gameSlice.actions;
 
 export default gameSlice.reducer;

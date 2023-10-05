@@ -1,16 +1,20 @@
 'use client'
 import { RootState } from "@/slices";
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Card, { CardType } from "./Card";
 import { beatCard } from "@/slices/gameSlice";
+import { CardBufferType } from "./Board";
 
-const CardsOnTable: FC = () => {
+const CardsOnTable: FC<{
+    cardBuffer: CardBufferType,
+}> = ({ cardBuffer }) => {
     const dispatch = useDispatch();
     const cardsOnTable = useSelector((state: RootState) => state.gameSlice.cardsOnTable);
-    const cardBuffer = useSelector((state: RootState) => state.gameSlice.cardBuffer);
-    const onClick = (card: CardType) => () => {
-        dispatch(beatCard(card));
+    const onClick = (card1: CardType) => () => {
+        if (cardBuffer !== null) {
+            dispatch(beatCard({card1, card2: cardBuffer.card}));
+        }
     }
     return (
         <div style={{
