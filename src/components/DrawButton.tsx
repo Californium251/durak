@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { useDispatch } from "react-redux";
-import { drawCards } from "@/slices/gameSlice";
+import { pickUp } from "@/slices/gameSlice";
 
 const DrawButton: FC<{ playerId?: string }> = ({ playerId }) => {
     const dispatch = useDispatch();
     const onClick = () => {
-        dispatch(drawCards());
+        dispatch(pickUp());
     }
     return (
         <button style={{

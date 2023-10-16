@@ -56,3 +56,14 @@ export const updateHands = (state) => {
         }
     })
 };
+
+export const isAddCardAllowed = (state) => state.table.map((cardPair: Array<Array<CardType>>) => cardPair[0]).length < 6;
+
+export const noCardsInDeck = (state) => state.cards.length === 0;
+
+export const onlyOnePlayerHasCards = (state) => state.players.map((p) => p.cards).reduce((acc, cards) => {
+    if (cards.length === 0) {
+        acc += 1;
+    }
+    return acc;
+}, 0) === 1;

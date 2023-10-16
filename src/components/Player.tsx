@@ -4,12 +4,13 @@ import Card from "./Card";
 import { useSelector, useDispatch } from "react-redux";
 import { CardType } from "./Card";
 import { RootState } from "../slices/index";
-import { makeTurn, addCardToBuffer } from "@/slices/gameSlice";
+import { addCard } from "@/slices/gameSlice";
 import { CardBufferType } from "./Board";
 
 export type PlayerType = {
     playerId: string,
     cards: CardType[],
+    activePlayer?: boolean,
 }
 
 const Player: FC<{ 
@@ -29,7 +30,7 @@ const Player: FC<{
     });
     const onClick = (card: CardType) => () => {
         if (playerId === activePlayerId) {
-            dispatch(makeTurn(card));
+            dispatch(addCard(card));
         }
         if (playerId === defendingPlayer.playerId) {
             setCardBuffer({ playerId, card });
@@ -44,7 +45,7 @@ const Player: FC<{
                 flexWrap: 'wrap',
             }}
         >{
-            player.cards.map((c, i) => <Card key={i} suit={c.suit} rank={c.rank} onClick={onClick(c)} />)
+            player.cards.map((c, i) => <Card key={i} suit={c ? c.suit : ''} rank={c ? c.rank : ''} onClick={onClick(c)} />)
         }</div>
     )
 }

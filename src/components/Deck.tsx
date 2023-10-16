@@ -13,7 +13,7 @@ const Deck: FC = () => {
     return (
         <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'start', width: '100%' }}>
             {cards.length > 0 && <Image src="/deck.svg" width="100" height="150" alt="deck" />}
-            {!trumpDrawn && <Card suit={trump.suit} rank={trump.rank} />}
+            {!trumpDrawn && <Card suit={trump ? trump.suit : ''} rank={trump ? trump.rank : ''} />}
         </div>
     )
 };

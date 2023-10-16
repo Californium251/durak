@@ -3,17 +3,17 @@ import { RootState } from "@/slices";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Card, { CardType } from "./Card";
-import { beatCard } from "@/slices/gameSlice";
+import { beat } from "@/slices/gameSlice";
 import { CardBufferType } from "./Board";
 
-const CardsOnTable: FC<{
+const Table: FC<{
     cardBuffer: CardBufferType,
 }> = ({ cardBuffer }) => {
     const dispatch = useDispatch();
-    const cardsOnTable = useSelector((state: RootState) => state.gameSlice.cardsOnTable);
+    const table = useSelector((state: RootState) => state.gameSlice.table);
     const onClick = (card1: CardType) => () => {
         if (cardBuffer !== null) {
-            dispatch(beatCard({card1, card2: cardBuffer.card}));
+            dispatch(beat({card1, card2: cardBuffer.card}));
         }
     }
     return (
@@ -24,12 +24,12 @@ const CardsOnTable: FC<{
                 justifyContent: 'center',
             }}
         >{
-            cardsOnTable?.map((card, i) => (
+            table?.map((card, i) => (
                 <div key={i} style={{
                     position: 'relative',
                     marginRight: '30px',
                 }}>
-                    <Card suit={card[0].suit} rank={card[0].rank} onClick={onClick(card[0])} />
+                    <Card suit={card[0] ? card[0].suit : ''} rank={card[0] ? card[0].rank : ''} onClick={onClick(card[0])} />
                     {card[1] && <div style={{
                             position: 'absolute',
                             top: '25px',
@@ -43,4 +43,4 @@ const CardsOnTable: FC<{
     )
 }
 
-export default CardsOnTable;
+export default Table;

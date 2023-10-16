@@ -63,6 +63,7 @@ const createPlayers: (n: number, cards: Array<CardType>) => Array<PlayerType> = 
         const player = {
             playerId: _.uniqueId(),
             cards: deck.splice(0, 6),
+            activePlayer: i === 1,
         }
         res.push(player);
     }
@@ -75,7 +76,7 @@ const WelcomeScreen: FC = () => {
     const playersCards = useSelector((state: RootState) => state.gameSlice.players).map((player) => player.cards);
     const deck = useSelector((state: RootState) => state.gameSlice.cards);
     const trumpDrawn = useSelector((state: RootState) => state.gameSlice.trumpDrawn);
-    const cardsOnTable = useSelector((state: RootState) => state.gameSlice.cardsOnTable);
+    const table = useSelector((state: RootState) => state.gameSlice.table);
     useEffect(() => {
         const numberOfPlayersWithoutCards = playersCards.reduce((acc, hand) => {
             if (hand.length === 0) {
@@ -83,7 +84,7 @@ const WelcomeScreen: FC = () => {
             }
             return acc;
         }, 0);
-        const isGameOver = numberOfPlayersWithoutCards + 1 === playersCards.length && deck.length === 0 && trumpDrawn && cardsOnTable.length === 0;
+        const isGameOver = numberOfPlayersWithoutCards + 1 === playersCards.length && deck.length === 0 && trumpDrawn && table.length === 0;
         if (isGameOver) {
             dispatch(endGame());
         }
@@ -100,7 +101,7 @@ const WelcomeScreen: FC = () => {
             playersPassed: [],
             activePlayerId: getFirstPlayerId(players),
             gameStarted: true,
-            cardsOnTable: [],
+            table: [],
         }));
     }
     return <>

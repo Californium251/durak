@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { useDispatch } from "react-redux";
-import { endTurn } from "@/slices/gameSlice";
+import { pass } from "@/slices/gameSlice";
 
 const PassButton: FC<{ playerId: string }> = ({ playerId }) => {
     const dispatch = useDispatch();
     const onClick = () => {
-        dispatch(endTurn(playerId))
+        dispatch(pass(playerId))
     }
     return (
         <button style={{
