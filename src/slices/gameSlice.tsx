@@ -8,8 +8,8 @@ import {
     checkIfCardBeats,
     updateHands,
     isAddCardAllowed,
-    noCardsInDeck,
-    onlyOnePlayerHasCards,
+    endTurn,
+    allPlayersPassed,
 } from "@/Utils/utils";
 
 const initialState: {
@@ -47,19 +47,19 @@ const gameSlice = createSlice({
             const { players } = state;
             players[0].cards = [
                 { suit: 'hearts', rank: 'six' },
-                { suit: 'hearts', rank: 'six' },
-                { suit: 'hearts', rank: 'six' },
-                { suit: 'hearts', rank: 'six' },
-                { suit: 'hearts', rank: 'six' },
-                { suit: 'hearts', rank: 'six' },
+                { suit: 'spades', rank: 'six' },
+                { suit: 'clubs', rank: 'seven' },
+                { suit: 'diamonds', rank: 'seven' },
+                { suit: 'hearts', rank: 'eight' },
+                { suit: 'spades', rank: 'eight' },
             ];
             players[1].cards = [
-                { suit: 'hearts', rank: 'ace'},
-                { suit: 'hearts', rank: 'ace'},
-                { suit: 'hearts', rank: 'ace'},
-                { suit: 'hearts', rank: 'ace'},
-                { suit: 'hearts', rank: 'ace'},
-                { suit: 'hearts', rank: 'ace'},
+                { suit: 'hearts', rank: 'seven'},
+                { suit: 'spades', rank: 'seven'},
+                { suit: 'clubs', rank: 'eight'},
+                { suit: 'diamonds', rank: 'eight'},
+                { suit: 'hearts', rank: 'nine'},
+                { suit: 'spades', rank: 'nine'},
             ]
         },
         addCard: (state, action: PayloadAction<CardType>) => {
@@ -107,16 +107,7 @@ const gameSlice = createSlice({
                     defendingPlayerHand.splice(indexOfCardToRemove, 1);
                 }
             };
-            if (!isAddCardAllowed(state)) {
-                if (noCardsInDeck(state) && onlyOnePlayerHasCards(state)) {
-                    console.log('game over');
-                    state.gameStarted = false;
-                } else {
-                    state.table = [];
-                    updateHands(state);
-                    state.activePlayerId = getDefendingPlayer(state).playerId;
-                }
-            };
+            endTurn(state);
         },
         pickUp: (state) => {
             const table = _.flatten(state.table);
@@ -144,6 +135,9 @@ const gameSlice = createSlice({
                 updateHands(state);
                 state.activePlayerId = defendingPlayerId;
             };
+            if (allPlayersPassed(state)) {
+                endTurn(state);
+            }
         },
         endGame: (state) => {
             state.gameStarted = false;

@@ -46,7 +46,8 @@ const Player: FC<{
             }}
         >{
             player.cards.map((c, i) => <Card key={i} suit={c ? c.suit : ''} rank={c ? c.rank : ''} onClick={onClick(c)} />)
-        }</div>
+        }
+        </div>
     )
 }
 

@@ -67,3 +67,20 @@ export const onlyOnePlayerHasCards = (state) => state.players.map((p) => p.cards
     }
     return acc;
 }, 0) === 1;
+
+export const areAllCardsAreBeaten = (state) => state.table.findIndex(([, card2]) => card2 === undefined) === -1;
+
+export const endTurn = (state) => {
+    if (!isAddCardAllowed(state)) {
+        if (noCardsInDeck(state) && onlyOnePlayerHasCards(state)) {
+            state.gameStarted = false;
+        } else if (areAllCardsAreBeaten(state)) {
+            console.log('here')
+            state.table = [];
+            updateHands(state);
+            state.activePlayerId = getDefendingPlayer(state).playerId;
+        }
+    };
+};
+
+export const allPlayersPassed = (state) => state.playersPassed.length + 1 === state.players.length;
