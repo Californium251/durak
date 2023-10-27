@@ -6,10 +6,7 @@ import Table from "./Table";
 import { useDispatch, useSelector } from "react-redux";
 import Player from "./Player";
 import { RootState } from "@/slices";
-import PassButton from "./PassButton";
-import DrawButton from "./DrawButton";
 import { CardType } from "./Card";
-import { testAction } from "@/slices/gameSlice";
 
 export type CardBufferType = {
     playerId: string,
@@ -30,14 +27,12 @@ const Board: FC = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            alignItems: 'center',
         }}>
             <div style={{
-                width: '100%',
+                display: 'flex',
                 flexDirection: 'row',
-                justifyContent: 'space-between',
+                justifyContent: 'space-around',
             }}>
-                <Deck />
                 {players.filter((p) => !p.activePlayer).map((p, i) => (
                     <div style={{ display: 'flex', flexDirection: 'row' }} key={i}>
                         <Player
@@ -45,16 +40,21 @@ const Board: FC = () => {
                             cardBuffer={{ playerId: p.playerId, card: null }}
                             setCardBuffer={setCardBuffer}
                         />
-                        <DrawButton playerId={p.playerId} />
                     </div>
                 ) )}
             </div>
-            <Table cardBuffer={cardBuffer} />
+            <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+            }}>
+                <Table cardBuffer={cardBuffer} setCardBuffer={setCardBuffer} />
+                <Deck />
+            </div>
             <div style={{
                 display: 'flex',
                 flexDirection: 'row',
                 width: '100%',
-                justifyContent: 'space-between',
+                justifyContent: 'center',
             }}>
                 {players.filter((p) => p.activePlayer).map((p, i) => (
                     <div key={i}>
@@ -65,10 +65,6 @@ const Board: FC = () => {
                         />
                     </div>
                 ))}
-                <PassButton playerId={activePlayerId as string} />
-                <button onClick={() => {
-                    dispatch(testAction());
-                }}>TEST TEST TEST</button>
             </div>
         </div>
     )

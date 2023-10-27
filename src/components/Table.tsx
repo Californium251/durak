@@ -8,12 +8,14 @@ import { CardBufferType } from "./Board";
 
 const Table: FC<{
     cardBuffer: CardBufferType,
-}> = ({ cardBuffer }) => {
+    setCardBuffer: Dispatch<SetStateAction<CardBufferType>>,
+}> = ({ cardBuffer, setCardBuffer }) => {
     const dispatch = useDispatch();
     const table = useSelector((state: RootState) => state.gameSlice.table);
     const onClick = (card1: CardType) => () => {
         if (cardBuffer !== null) {
-            dispatch(beat({card1, card2: cardBuffer.card}));
+            dispatch(beat({ card1, card2: cardBuffer.card }));
+            setCardBuffer(null);
         }
     }
     return (

@@ -4,12 +4,13 @@ import { CardType } from "@/components/Card";
 import { PlayerType } from "@/components/Player";
 import { RootState } from ".";
 import {
-    getDefendingPlayer,
+    getDefender,
     checkIfCardBeats,
     updateHands,
     isAddCardAllowed,
     endTurn,
     allPlayersPassed,
+    canPlayerAdd
 } from "@/Utils/utils";
 
 const initialState: {
@@ -62,18 +63,18 @@ const gameSlice = createSlice({
                 { suit: 'spades', rank: 'nine'},
             ]
         },
-        addCard: (state, action: PayloadAction<CardType>) => {
+        addCard: (state, action: PayloadAction<{ card: CardType, playerId: string }>) => {
             const { table, players, activePlayerId } = state;
-            const card = action.payload;
+            const { card, playerId } = action.payload;
             const checkIfCardsAppropriate = (card: CardType, table: Array<Array<CardType>>) => {
                 if (table.length === 0) {
                     return true;
                 }
                 return _.flatten(table).map((c) => c ? c.rank : null).includes(card ? card.rank : null);
             }
-            if (table && checkIfCardsAppropriate(card, table) && isAddCardAllowed(state)) {
+            if (table && checkIfCardsAppropriate(card, table) && isAddCardAllowed(state) && canPlayerAdd(state, playerId)) {
                 table.push([card]);
-                const activePlayer = players.find((p) => p.playerId === activePlayerId);
+                const activePlayer = players.find((p) => p.playerId === playerId);
                 if (activePlayer) {
                     activePlayer?.cards.splice(
                         activePlayer.cards.findIndex((c) => {
@@ -94,53 +95,38 @@ const gameSlice = createSlice({
                         return cardPair[0].rank === card1.rank && cardPair[0].suit === card1.suit;
                     }
                 });
-                console.log(cardPair);
                 if (cardPair) {
                     cardPair[1] = card2;
-                    const defendingPlayerHand = getDefendingPlayer(state).cards;
-                    const indexOfCardToRemove = defendingPlayerHand
+                    const defenderHand = getDefender(state).cards;
+                    const indexOfCardToRemove = defenderHand
                         .findIndex((c: CardType) => {
                             if (c && card2) {
                                 return c.suit === card2.suit && c.rank === card2.rank;
                             }
                         });
-                    defendingPlayerHand.splice(indexOfCardToRemove, 1);
+                    defenderHand.splice(indexOfCardToRemove, 1);
                 }
             };
             endTurn(state);
         },
         pickUp: (state) => {
             const table = _.flatten(state.table);
-            const defendingPlayer = getDefendingPlayer(state);
-            defendingPlayer.cards.push(...table);
+            const defender = getDefender(state);
+            defender.cards.push(...table);
             state.table = [];
             updateHands(state);
-            const defendingPlayerIndex = state.players.findIndex((p) => p.playerId === defendingPlayer.playerId);
-            const nextPlayerId = defendingPlayerIndex + 1 < state.players.length ? defendingPlayerIndex + 1 : 0;
+            const defenderIndex = state.players.findIndex((p) => p.playerId === defender.playerId);
+            const nextPlayerId = defenderIndex + 1 < state.players.length ? defenderIndex + 1 : 0;
             state.activePlayerId = state.players[nextPlayerId].playerId;
         },
         pass: (state, action: PayloadAction<string>) => {
             state.playersPassed.push(action.payload);
-            const { playersPassed, players } = state;
-            const defendingPlayerId = getDefendingPlayer(state).playerId;
-            const attackingPlayersIds = players.map((p) => p.playerId).filter((id) => id !== defendingPlayerId);
-            const isTurnDone = attackingPlayersIds.reduce((acc, id) => {
-                if (!playersPassed.includes(id)) {
-                    acc = false;
-                }
-                return acc;
-            }, true);
-            if (isTurnDone) {
-                state.table = [];
-                updateHands(state);
-                state.activePlayerId = defendingPlayerId;
-            };
             if (allPlayersPassed(state)) {
                 endTurn(state);
             }
         },
         endGame: (state) => {
-            state.gameStarted = false;
+            state = initialState;
         },
     }
 });

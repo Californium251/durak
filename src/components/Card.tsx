@@ -5,11 +5,19 @@ export type CardType = {
     suit: string,
     rank: string,
     onClick?: () => void,
+    style?: Object,
 } | null;
 
-const Card: FC<PropsWithChildren<CardType>> = ({ suit, rank, onClick = () => {} }) => {
+const Card: FC<PropsWithChildren<CardType>> = ({ suit, rank, onClick = () => {}, ...props }) => {
     return (
-        <Image src={`/cards/${suit}-${rank}.svg`} alt={`${suit}-${rank}`} width="100" height="150" onClick={onClick} />
+        <Image
+            {...props}
+            src={`/cards/${suit}-${rank}.svg`}
+            alt={`${suit}-${rank}`}
+            width="100"
+            height="150"
+            onClick={onClick}
+        />
     )
 }
 

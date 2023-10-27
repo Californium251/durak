@@ -3,7 +3,7 @@ import { RootState } from "@/slices";
 import { CardType } from "@/components/Card";
 import { PlayerType } from "@/components/Player";
 
-export const getDefendingPlayer = (state) => {
+export const getDefender = (state) => {
     const { activePlayerId, players } = state;
     const indexOfActivePlayer = players.findIndex((p) => p.playerId === activePlayerId);
     const indexOfDefendingPlayer = indexOfActivePlayer + 1 === players.length ? 0 : indexOfActivePlayer + 1;
@@ -49,7 +49,6 @@ export const updateHands = (state) => {
             if (state.cards.length > 0) {
                 p.cards.push(state.cards.pop() as CardType);
             } else if (!state.trumpDrawn) {
-                console.log('ok');
                 p.cards.push(state.trump);
                 state.trumpDrawn = true;
             }
@@ -57,7 +56,8 @@ export const updateHands = (state) => {
     })
 };
 
-export const isAddCardAllowed = (state) => state.table.map((cardPair: Array<Array<CardType>>) => cardPair[0]).length < 6;
+export const isAddCardAllowed = (state) => state
+    .table.map((cardPair: Array<Array<CardType>>) => cardPair[0]).length < 6 || getDefender(state).cards.length === 0;
 
 export const noCardsInDeck = (state) => state.cards.length === 0;
 
@@ -68,19 +68,43 @@ export const onlyOnePlayerHasCards = (state) => state.players.map((p) => p.cards
     return acc;
 }, 0) === 1;
 
-export const areAllCardsAreBeaten = (state) => state.table.findIndex(([, card2]) => card2 === undefined) === -1;
+export const areAllCardsBeaten = (state) => {
+    if (state.table.length === 0) {
+        return false;
+    }
+    return state.table.findIndex(([, card2]) => card2 === undefined) === -1
+};
 
 export const endTurn = (state) => {
     if (!isAddCardAllowed(state)) {
         if (noCardsInDeck(state) && onlyOnePlayerHasCards(state)) {
             state.gameStarted = false;
-        } else if (areAllCardsAreBeaten(state)) {
-            console.log('here')
+        } else if (areAllCardsBeaten(state)) {
             state.table = [];
             updateHands(state);
-            state.activePlayerId = getDefendingPlayer(state).playerId;
+            state.activePlayerId = getDefender(state).playerId;
         }
+    };
+    if (areAllCardsBeaten(state) && allPlayersPassed(state)) {
+        state.table = [];
+        state.playersPassed = [];
+        updateHands(state);
+        state.activePlayerId = getDefender(state).playerId;
     };
 };
 
 export const allPlayersPassed = (state) => state.playersPassed.length + 1 === state.players.length;
+
+export const canPlayerAdd = (state, playerId: string) => {
+    const { activePlayerId, playersPassed } = state;
+    const defender = getDefender(state);
+    const activePlayerPassed = playersPassed.includes(activePlayerId);
+    if (playerId === defender.playerId) {
+        return false;
+    } else if (playerId === activePlayerId) {
+        return true;
+    } else if (activePlayerPassed) {
+        return true;
+    }
+    return false;
+}
