@@ -1,6 +1,6 @@
 import { Draft } from "@reduxjs/toolkit";
 import { RootState } from "@/slices";
-import { CardType } from "@/components/Card";
+import { CardType } from "./Types";
 import { PlayerType } from "@/components/Player";
 
 export const getDefender = (state) => {
@@ -62,7 +62,7 @@ export const isAddCardAllowed = (state) => state
 export const noCardsInDeck = (state) => state.cards.length === 0;
 
 export const onlyOnePlayerHasCards = (state) => state.players.map((p) => p.cards).reduce((acc, cards) => {
-    if (cards.length === 0) {
+    if (cards.length !== 0) {
         acc += 1;
     }
     return acc;
@@ -107,4 +107,14 @@ export const canPlayerAdd = (state, playerId: string) => {
         return true;
     }
     return false;
+}
+
+export const endGame = (state) => {
+    state.cards = [];
+    state.trump = { suit: '', rank: '' };
+    state.trumpDrawn = false;
+    state.players = [];
+    state.playersPassed = [];
+    state.table = [];
+    state.gameStarted = false;
 }

@@ -1,12 +1,11 @@
 'use client'
 import Image from "next/image";
-import { FC, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { FC } from "react";
+import { useSelector } from "react-redux";
 import { RootState } from "../slices/index";
-import Card, { CardType } from "./Card";
+import Card from "./Card";
 
 const Deck: FC = () => {
-    const dispatch = useDispatch();
     const cards = useSelector((state: RootState) => state.gameSlice.cards);
     const trumpDrawn = useSelector((state: RootState) => state.gameSlice.trumpDrawn);
     const trump = useSelector((state: RootState) => state.gameSlice.trump);

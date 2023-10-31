@@ -2,19 +2,20 @@
 import { RootState } from "@/slices";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Card, { CardType } from "./Card";
+import Card from "./Card";
 import { beat } from "@/slices/gameSlice";
-import { CardBufferType } from "./Board";
+import { CardType, CardBufferType } from "@/utils/Types";
+import useApi from "@/hooks/useApi";
 
 const Table: FC<{
     cardBuffer: CardBufferType,
     setCardBuffer: Dispatch<SetStateAction<CardBufferType>>,
 }> = ({ cardBuffer, setCardBuffer }) => {
-    const dispatch = useDispatch();
+    const { beat } = useApi();
     const table = useSelector((state: RootState) => state.gameSlice.table);
     const onClick = (card1: CardType) => () => {
         if (cardBuffer !== null) {
-            dispatch(beat({ card1, card2: cardBuffer.card }));
+            beat(card1, cardBuffer.card);
             setCardBuffer(null);
         }
     }

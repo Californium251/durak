@@ -1,13 +1,13 @@
 'use client'
 import { FC, SetStateAction, Dispatch, useState } from "react";
 import Card from "./Card";
-import { useSelector, useDispatch } from "react-redux";
-import { CardType } from "./Card";
+import { useSelector } from "react-redux";
 import { RootState } from "../slices/index";
-import { addCard } from "@/slices/gameSlice";
-import { CardBufferType } from "./Board";
 import PassButton from "./PassButton";
 import PickUpButton from "./PickUpButton";
+import store from "../slices/index";
+import { CardType, CardBufferType } from "@/utils/Types";
+import useApi from "@/hooks/useApi";
 
 export type PlayerType = {
     playerId: string,
@@ -28,10 +28,10 @@ const Player: FC<{
     cardBuffer: CardBufferType, 
     setCardBuffer: Dispatch<SetStateAction<CardBufferType>> 
 }> = ({ playerId, cardBuffer, setCardBuffer }) => {
-    const dispatch = useDispatch();
+    const { addCard } = useApi();
     const player: PlayerType = useSelector((state: RootState) => state.gameSlice.players.find((p) => p.playerId === playerId)) as PlayerType;
     const activePlayerId = useSelector((state: RootState) => state.gameSlice.activePlayerId);
-    const defendingPlayer = useSelector((state: RootState) => {
+    const defender = useSelector((state: RootState) => {
         const activeIndex = state.gameSlice.players.findIndex((p) => p.playerId === activePlayerId);
         if (activeIndex + 1 === state.gameSlice.players.length) {
             return state.gameSlice.players[0];
@@ -40,10 +40,10 @@ const Player: FC<{
     });
     const onClick = (card: CardType) => () => {
         
-        if (playerId === defendingPlayer.playerId) {
+        if (playerId === defender.playerId) {
             setCardBuffer({ playerId, card });
         } else {
-            dispatch(addCard({ card, playerId }));
+            addCard(playerId, card);
         }
     };
     const [cardHover, setCardHover] = useState<CardType>(null);
@@ -56,7 +56,7 @@ const Player: FC<{
                 flexWrap: 'nowrap',
                 border: `${playerId === activePlayerId
                     ? '1px solid black'
-                    : playerId === defendingPlayer.playerId
+                    : playerId === defender.playerId
                         ? '1px solid red'
                         : 'none'}`,
                 height: '230px',

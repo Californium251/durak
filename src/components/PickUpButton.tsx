@@ -1,19 +1,25 @@
-import { FC } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { pickUp } from "@/slices/gameSlice";
-import { getDefender } from "@/Utils/utils";
+import { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getDefender } from "@/utils/utils";
 import { RootState } from "@/slices";
+import useApi from "@/hooks/useApi";
+import { areAllCardsBeaten } from "@/utils/utils";
 
 const PickUpButton: FC<{ playerId?: string }> = ({ playerId }) => {
+    const { pickUp } = useApi();
     const state = useSelector((state: RootState) => state.gameSlice);
-    const defendingPlayer = getDefender(state);
-    const dispatch = useDispatch();
+    const defender = getDefender(state);
+    const isTableEmpty = useSelector((state: RootState) => state.gameSlice.table.length === 0);
+    const [disabled, setDisabled] = useState(true);
+    useEffect(() => {
+        setDisabled(areAllCardsBeaten(state) || isTableEmpty);
+    })
     const onClick = () => {
-        dispatch(pickUp());
+        pickUp();
     };
     return (<>
-        {playerId === defendingPlayer.playerId
-        ? <button style={{
+        {playerId === defender.playerId
+        ? <button disabled={disabled} style={{
             width: '180px',
             height: '60px',
         }}

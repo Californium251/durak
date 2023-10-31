@@ -4,10 +4,13 @@ import * as _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/slices";
 import Board from "./Board";
-import { initializeGame, endGame } from "@/slices/gameSlice";
-import { CardType } from "./Card";
+import { initializeGame } from "@/slices/gameSlice";
+import { CardType } from "@/utils/Types";
 import { PlayerType } from "./Player";
-
+import store from '@/slices';
+import ApiContext from '@/context/ApiContext';
+import io from 'socket.io-client';
+import useApi from "@/hooks/useApi";
 const cards = [
     { suit: 'hearts', rank: 'six' },
     { suit: 'hearts', rank: 'seven' },
@@ -85,9 +88,6 @@ const WelcomeScreen: FC = () => {
             return acc;
         }, 0);
         const isGameOver = numberOfPlayersWithoutCards + 1 === playersCards.length && deck.length === 0 && trumpDrawn && table.length === 0;
-        if (isGameOver) {
-            dispatch(endGame());
-        }
     }, [...playersCards]);
     const dispatch = useDispatch();
     const gameStarted: boolean = useSelector((state: RootState) => state.gameSlice.gameStarted);

@@ -3,21 +3,16 @@ import { FC, useState } from "react";
 import * as _ from "lodash";
 import Deck from "./Deck";
 import Table from "./Table";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Player from "./Player";
 import { RootState } from "@/slices";
-import { CardType } from "./Card";
-
-export type CardBufferType = {
-    playerId: string,
-    card: CardType,
-} | null;
+import { CardBufferType} from "../utils/Types";
+import { testAction } from "@/slices/gameSlice";
 
 const Board: FC = () => {
-    const dispatch = useDispatch();
     const activePlayerId = useSelector((state: RootState) => state.gameSlice.activePlayerId);
     const players = useSelector((state: RootState) => state.gameSlice.players);
-    const playerIds = players.map(({ playerId }) => playerId);
+    const dispatch = useDispatch();
     const [cardBuffer, setCardBuffer] = useState<CardBufferType>(null);
     return (
         <div style={{
@@ -66,6 +61,11 @@ const Board: FC = () => {
                     </div>
                 ))}
             </div>
+            <button onClick={() => {
+                dispatch(testAction());
+            }}>
+                Test
+            </button>
         </div>
     )
 }

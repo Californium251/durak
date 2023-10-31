@@ -1,17 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import * as _ from "lodash";
-import { CardType } from "@/components/Card";
+import { CardType } from "@/utils/Types";
 import { PlayerType } from "@/components/Player";
-import { RootState } from ".";
 import {
     getDefender,
     checkIfCardBeats,
     updateHands,
     isAddCardAllowed,
     endTurn,
+    endGame,
     allPlayersPassed,
-    canPlayerAdd
-} from "@/Utils/utils";
+    canPlayerAdd,
+    onlyOnePlayerHasCards
+} from "@/utils/utils";
 
 const initialState: {
     cards: Array<CardType>,
@@ -61,7 +62,9 @@ const gameSlice = createSlice({
                 { suit: 'diamonds', rank: 'eight'},
                 { suit: 'hearts', rank: 'nine'},
                 { suit: 'spades', rank: 'nine'},
-            ]
+            ];
+            state.cards.length = 0;
+            state.trumpDrawn = true;
         },
         addCard: (state, action: PayloadAction<{ card: CardType, playerId: string }>) => {
             const { table, players, activePlayerId } = state;
@@ -84,6 +87,9 @@ const gameSlice = createSlice({
                         }), 1
                     );
                 }
+            }
+            if (onlyOnePlayerHasCards(state) && state.cards.length === 0) {
+                endGame(state);
             }
         },
         beat: (state, action: PayloadAction<{ card1: CardType, card2: CardType }>) => {
@@ -125,12 +131,9 @@ const gameSlice = createSlice({
                 endTurn(state);
             }
         },
-        endGame: (state) => {
-            state = initialState;
-        },
     }
 });
 
-export const { initializeGame, addCard, beat, pickUp, pass, endGame, testAction } = gameSlice.actions;
+export const { initializeGame, addCard, beat, pickUp, pass, testAction } = gameSlice.actions;
 
 export default gameSlice.reducer;

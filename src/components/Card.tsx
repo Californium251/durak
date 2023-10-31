@@ -1,12 +1,6 @@
 import React, { FC, PropsWithChildren } from "react";
 import Image from "next/image";
-
-export type CardType = {
-    suit: string,
-    rank: string,
-    onClick?: () => void,
-    style?: Object,
-} | null;
+import { CardType } from "@/utils/Types";
 
 const Card: FC<PropsWithChildren<CardType>> = ({ suit, rank, onClick = () => {}, ...props }) => {
     return (
