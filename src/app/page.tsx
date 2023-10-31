@@ -6,9 +6,7 @@ import * as gameActions from '@/slices/gameSlice';
 import store from '@/slices/index';
 import { CardType } from '@/utils/Types';
 import Transport from '@/utils/Transport';
-import io from 'socket.io-client'
-
-export const socket = io('http://localhost:3001');
+import { socket } from '@/utils/socket'
 
 const passCb = (playerId: string) => {
   store.dispatch(gameActions.pass(playerId));

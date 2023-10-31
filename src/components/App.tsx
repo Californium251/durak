@@ -7,10 +7,6 @@ import Board from "./Board";
 import { initializeGame } from "@/slices/gameSlice";
 import { CardType } from "@/utils/Types";
 import { PlayerType } from "./Player";
-import store from '@/slices';
-import ApiContext from '@/context/ApiContext';
-import io from 'socket.io-client';
-import useApi from "@/hooks/useApi";
 const cards = [
     { suit: 'hearts', rank: 'six' },
     { suit: 'hearts', rank: 'seven' },

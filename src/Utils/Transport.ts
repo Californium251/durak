@@ -1,6 +1,6 @@
 'use client'
 import { CardType } from "./Types";
-import { socket } from '../app/page';
+import { socket } from './socket';
 import { Socket } from 'socket.io-client';
 import { DefaultEventsMap } from "@socket.io/component-emitter";
 
