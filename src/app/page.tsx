@@ -31,6 +31,7 @@ socket.on('beat', beatCb);
 const transport = new Transport(socket)
 
 function Home() {
+  console.log(socket);
   return (
     <ReduxProvider>
       <ApiProvider transport={transport}>

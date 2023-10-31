@@ -91,7 +91,7 @@ const Player: FC<{
                         left: c === cardHover ? `${left + dLeft + 100}px` : `${left + 100}px`,
                         transform: `rotate(${alphaI(i)}deg`,
                     }}
-                    onMouseEnter={() => setCardHover(c)}
+                    OnMouseEnter={() => setCardHover(c)}
                 />})
         }</div>
         <div style={{

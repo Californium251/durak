@@ -2,6 +2,7 @@
 import React from 'react';
 import { CardType } from '@/utils/Types';
 import { createContext } from 'react';
+import { TransportType } from '@/utils/Transport';
 
 const ApiContext = createContext({
     pass: (playerId: string) => { },
@@ -12,7 +13,7 @@ const ApiContext = createContext({
 
 export default ApiContext
 
-export function ApiProvider({ transport, children }) {
+export function ApiProvider({ transport, children }: { transport: TransportType, children: React.ReactNode }) {
     return <ApiContext.Provider value={transport}>
         {children}
     </ApiContext.Provider>

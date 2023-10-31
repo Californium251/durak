@@ -1,15 +1,26 @@
 'use client'
 import { CardType } from "./Types";
 import { socket } from '../app/page';
+import { Socket } from 'socket.io-client';
+import { DefaultEventsMap } from "@socket.io/component-emitter";
 
-const promisify = (asyncFn) => (...args) => {
+const promisify = (asyncFn: any) => (...args: any) => {
     const promise = new Promise((resolve, reject) => {
-        asyncFn.call(socket, ...args, (data, err) => (err ? reject(err) : resolve(data)));
+        asyncFn.call(socket, ...args, (data: any, err: any) => (err ? reject(err) : resolve(data)));
     });
     return promise;
 };
 
-class Transport {
+export type TransportType = {
+    socket: Socket;
+    pass: (playerId: string) => Promise<any>;
+    pickUp: () => Promise<any>;
+    addCard: (playerId: string, card: CardType) => Promise<any>;
+    beat: (card1: CardType, card2: CardType) => Promise<any>;
+}
+
+class Transport implements TransportType {
+    socket: Socket<DefaultEventsMap, DefaultEventsMap>;
     constructor(socket: any) {
         this.socket = socket;
     }
