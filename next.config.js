@@ -5,6 +5,10 @@ const nextConfig = {
     webpack: (config, { isServer }) => {
         config.resolve.alias['@'] = path.join(__dirname, 'src')
         return config
+    },
+    i18n: {
+        locales: ['en', 'es'],
+        defaultLocale: 'en',
     }
 }
 
