@@ -12,7 +12,7 @@ import {
     allPlayersPassed,
     canPlayerAdd,
     onlyOnePlayerHasCards
-} from "../utils/TestName";
+} from "../utils/utils";
 
 const initialState: {
     cards: Array<CardType>,
