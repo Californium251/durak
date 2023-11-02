@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../slices/index";
-import { getDefender, areAllCardsBeaten } from "../utils/utils";
+import { getDefender, areAllCardsBeaten } from "../utils/Utils";
 import useApi from "../hooks/useApi";
 
 const PassButton: FC<{ playerId: string }> = ({ playerId }) => {
