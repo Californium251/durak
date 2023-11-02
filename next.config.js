@@ -3,7 +3,7 @@ const path = require('path');
 const nextConfig = {
     output: 'standalone',
     webpack: (config, { isServer }) => {
-        config.resolve.alias['@'] = path.join(__dirname, 'src')
+        config.resolve.alias['~'] = path.join(__dirname, 'src')
         return config
     },
     i18n: {
