@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getDefender } from "../utils/Utils";
+import { getDefender } from "../utils/TestName";
 import { RootState } from "../slices/index";
 import useApi from "../hooks/useApi";
-import { areAllCardsBeaten } from "../utils/Utils";
+import { areAllCardsBeaten } from "../utils/TestName";
 
 const PickUpButton: FC<{ playerId?: string }> = ({ playerId }) => {
     const { pickUp } = useApi();
