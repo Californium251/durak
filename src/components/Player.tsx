@@ -6,8 +6,8 @@ import { RootState } from "../slices/index";
 import PassButton from "./PassButton";
 import PickUpButton from "./PickUpButton";
 import store from "../slices/index";
-import { CardType, CardBufferType } from "@/utils/Types";
-import useApi from "@/hooks/useApi";
+import { CardType, CardBufferType } from "../utils/Types";
+import useApi from "../hooks/useApi";
 
 export type PlayerType = {
     playerId: string,

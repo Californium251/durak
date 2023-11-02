@@ -1,8 +1,8 @@
 'use client'
 import React from 'react';
-import { CardType } from '@/utils/Types';
+import { CardType } from '../utils/Types';
 import { createContext } from 'react';
-import { TransportType } from '@/utils/Transport';
+import { TransportType } from '../utils/Transport';
 
 const ApiContext = createContext({
     pass: (playerId: string) => { },

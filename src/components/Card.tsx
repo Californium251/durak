@@ -1,6 +1,6 @@
 import React, { FC, PropsWithChildren } from "react";
 import Image from "next/image";
-import { CardType } from "@/utils/Types";
+import { CardType } from "../utils/Types";
 
 const Card: FC<PropsWithChildren<CardType>> = ({ suit, rank, onClick = () => {}, ...props }) => {
     return (

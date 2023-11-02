@@ -1,5 +1,5 @@
 import { CardType } from "./Types";
-import { PlayerType } from "@/components/Player";
+import { PlayerType } from "../components/Player";
 
 export const getDefender = (state: any) => {
     const { activePlayerId, players } = state;
