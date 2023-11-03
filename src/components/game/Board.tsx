@@ -5,9 +5,9 @@ import Deck from "./Deck";
 import Table from "./Table";
 import { useSelector, useDispatch } from "react-redux";
 import Player from "./Player";
-import { RootState } from "../slices/index";
-import { CardBufferType} from "../utils/Types";
-import { testAction } from "../slices/gameSlice";
+import { RootState } from "../../slices/index";
+import { CardBufferType} from "../../utils/Types";
+import { testAction } from "../../slices/gameSlice";
 
 const Board: FC = () => {
     const activePlayerId = useSelector((state: RootState) => state.gameSlice.activePlayerId);

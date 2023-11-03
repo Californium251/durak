@@ -2,12 +2,12 @@
 import { FC, SetStateAction, Dispatch, useState } from "react";
 import Card from "./Card";
 import { useSelector } from "react-redux";
-import { RootState } from "../slices/index";
+import { RootState } from "../../slices/index";
 import PassButton from "./PassButton";
 import PickUpButton from "./PickUpButton";
-import store from "../slices/index";
-import { CardType, CardBufferType } from "../utils/Types";
-import useApi from "../hooks/useApi";
+import store from "../../slices/index";
+import { CardType, CardBufferType } from "../../utils/Types";
+import useApi from "../../hooks/useApi";
 
 export type PlayerType = {
     playerId: string,

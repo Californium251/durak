@@ -7,7 +7,7 @@ const server = http.createServer((req, res) => {
 
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:3000',
+        origin: process.env.NEXT_PUBLIC_SOCKET_IO_URL,
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
     },
 });

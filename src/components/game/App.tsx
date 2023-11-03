@@ -2,10 +2,10 @@
 import { FC, useEffect } from "react";
 import * as _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../slices/index";
+import { RootState } from "../../slices/index";
 import Board from "./Board";
-import { initializeGame } from "../slices/gameSlice";
-import { CardType } from "../utils/Types";
+import { initializeGame } from "../../slices/gameSlice";
+import { CardType } from "../../utils/Types";
 import { PlayerType } from "./Player";
 const cards = [
     { suit: 'hearts', rank: 'six' },

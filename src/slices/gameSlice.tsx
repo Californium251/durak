@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import * as _ from "lodash";
 import { CardType } from "@/utils/Types";
-import { PlayerType } from "@/components/Player";
+import { PlayerType } from "@/components/game/Player";
 import {
     getDefender,
     checkIfCardBeats,

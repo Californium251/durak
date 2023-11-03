@@ -1,5 +1,5 @@
 'use client'
-import App from '@/components/App';
+import App from '@/components/game/App';
 import { ReduxProvider } from '@/slices/reduxProvider';
 import { ApiProvider } from '@/context/ApiContext';
 import * as gameActions from '@/slices/gameSlice';

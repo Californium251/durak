@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { FC } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../slices/index";
+import { RootState } from "../../slices/index";
 import Card from "./Card";
 
 const Deck: FC = () => {

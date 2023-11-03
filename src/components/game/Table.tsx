@@ -1,10 +1,10 @@
 'use client'
-import { RootState } from "../slices/index";
+import { RootState } from "../../slices/index";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Card from "./Card";
-import { CardType, CardBufferType } from "../utils/Types";
-import useApi from "../hooks/useApi";
+import { CardType, CardBufferType } from "../../utils/Types";
+import useApi from "../../hooks/useApi";
 
 const Table: FC<{
     cardBuffer: CardBufferType,
