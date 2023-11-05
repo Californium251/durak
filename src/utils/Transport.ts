@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 import { CardType } from "./Types";
 import { socket } from './socket';
 import { Socket } from 'socket.io-client';
@@ -15,8 +15,8 @@ export type TransportType = {
     socket: Socket;
     pass: (playerId: string) => Promise<any>;
     pickUp: () => Promise<any>;
-    addCard: (playerId: string, card: CardType) => Promise<any>;
-    beat: (card1: CardType, card2: CardType) => Promise<any>;
+    addCard: (gameId: string, playerId: string, card: CardType) => Promise<any>;
+    beat: (gameId: string, card1: CardType, card2: CardType, trump: CardType, playerId: string) => Promise<any>;
 }
 
 class Transport implements TransportType {
@@ -30,11 +30,11 @@ class Transport implements TransportType {
     pickUp() {
         return promisify(socket.emit)('pickUp');
     }
-    addCard(playerId: string, card: CardType ) {
-        return promisify(socket.emit)('addCard', { playerId, card })
+    addCard(gameId: string, playerId: string, card: CardType ) {
+        return promisify(socket.emit)('addCard', { gameId, playerId, card })
     }
-    beat(card1: CardType, card2: CardType) {
-        return promisify(socket.emit)('beat', card1, card2);
+    beat(gameId: string, card1: CardType, card2: CardType, trump: CardType, playerId: string) {
+        return promisify(socket.emit)('beat', gameId, card1, card2, trump, playerId);
     }
 };
 

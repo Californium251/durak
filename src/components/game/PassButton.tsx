@@ -9,7 +9,6 @@ const PassButton: FC<{ playerId: string }> = ({ playerId }) => {
     const state = useSelector((state: RootState) => state.gameSlice);
     const defender = getDefender(state);
     const onClick = () => {
-        console.log('pass')
         pass(playerId);
     }
     const [disabled, setDisabled] = useState(true);

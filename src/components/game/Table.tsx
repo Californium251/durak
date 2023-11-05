@@ -10,11 +10,13 @@ const Table: FC<{
     cardBuffer: CardBufferType,
     setCardBuffer: Dispatch<SetStateAction<CardBufferType>>,
 }> = ({ cardBuffer, setCardBuffer }) => {
+    const gameId = useSelector((state: RootState) => state.gameSlice._id);
+    const trump = useSelector((state: RootState) => state.gameSlice.trump);
     const { beat } = useApi();
     const table = useSelector((state: RootState) => state.gameSlice.table);
     const onClick = (card1: CardType) => () => {
         if (cardBuffer !== null) {
-            beat(card1, cardBuffer.card);
+            beat(gameId, card1, cardBuffer.card, trump, cardBuffer.playerId);
             setCardBuffer(null);
         }
     }

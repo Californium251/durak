@@ -13,17 +13,9 @@ import {
     canPlayerAdd,
     onlyOnePlayerHasCards
 } from "../utils/utils";
+import { GameType } from "@/utils/Types";
 
-const initialState: {
-    cards: Array<CardType>,
-    trump: CardType,
-    players: PlayerType[],
-    playersPassed: Array<string>,
-    activePlayerId?: string,
-    trumpDrawn?: boolean,
-    table: Array<Array<CardType>>,
-    gameStarted: boolean,
-} = {
+const initialState: GameType = {
     cards: [],
     trump: { suit: '', rank: '' },
     trumpDrawn: false,
@@ -38,12 +30,15 @@ const gameSlice = createSlice({
     initialState,
     reducers: {
         initializeGame: (state, action: PayloadAction<typeof initialState>) => {
-            const { cards, trump, players, activePlayerId } = action.payload;
+            const { cards, trump, players, activePlayerId, _id, table } = action.payload;
+            state._id = _id;
             state.cards = cards;
             state.trump = trump;
             state.players = players;
             state.activePlayerId = activePlayerId;
             state.gameStarted = true;
+            state.table = table;
+
         },
         testAction: (state) => {
             const { players } = state;

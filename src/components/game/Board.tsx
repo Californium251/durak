@@ -1,18 +1,15 @@
 'use client'
 import { FC, useState } from "react";
-import * as _ from "lodash";
 import Deck from "./Deck";
 import Table from "./Table";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Player from "./Player";
 import { RootState } from "../../slices/index";
 import { CardBufferType} from "../../utils/Types";
-import { testAction } from "../../slices/gameSlice";
 
 const Board: FC = () => {
     const activePlayerId = useSelector((state: RootState) => state.gameSlice.activePlayerId);
     const players = useSelector((state: RootState) => state.gameSlice.players);
-    const dispatch = useDispatch();
     const [cardBuffer, setCardBuffer] = useState<CardBufferType>(null);
     return (
         <div style={{
@@ -61,11 +58,6 @@ const Board: FC = () => {
                     </div>
                 ))}
             </div>
-            <button onClick={() => {
-                dispatch(testAction());
-            }}>
-                Test
-            </button>
         </div>
     )
 }

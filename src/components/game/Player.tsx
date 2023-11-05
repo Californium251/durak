@@ -29,6 +29,7 @@ const Player: FC<{
     setCardBuffer: Dispatch<SetStateAction<CardBufferType>> 
 }> = ({ playerId, cardBuffer, setCardBuffer }) => {
     const { addCard } = useApi();
+    const gameId = useSelector((state: RootState) => state.gameSlice._id);
     const player: PlayerType = useSelector((state: RootState) => state.gameSlice.players.find((p) => p.playerId === playerId)) as PlayerType;
     const activePlayerId = useSelector((state: RootState) => state.gameSlice.activePlayerId);
     const defender = useSelector((state: RootState) => {
@@ -43,7 +44,7 @@ const Player: FC<{
         if (playerId === defender.playerId) {
             setCardBuffer({ playerId, card });
         } else {
-            addCard(playerId, card);
+            addCard(gameId, playerId, card);
         }
     };
     const [cardHover, setCardHover] = useState<CardType>(null);

@@ -1,0 +1,10 @@
+{
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "'Cascadia Code', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 14,
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.automationProfile.osx": {
+
+
+    }
+}
