@@ -16,7 +16,7 @@ const Table: FC<{
     const table = useSelector((state: RootState) => state.gameSlice.table);
     const onClick = (card1: CardType) => () => {
         if (cardBuffer !== null) {
-            beat(gameId, card1, cardBuffer.card, trump, cardBuffer.playerId);
+            beat(gameId as string, card1, cardBuffer.card, trump, cardBuffer.playerId);
             setCardBuffer(null);
         }
     }

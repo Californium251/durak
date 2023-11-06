@@ -17,11 +17,6 @@ const addCard = (game, data) => {
         }
         return p;
     })
-    console.dir({
-        ...game,
-        players: updatedPlayers,
-        table: updatedTable,
-    })
     return {
         ...game,
         players: updatedPlayers,

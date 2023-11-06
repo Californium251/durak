@@ -6,10 +6,11 @@ import useApi from "../../hooks/useApi";
 
 const PassButton: FC<{ playerId: string }> = ({ playerId }) => {
     const { pass } = useApi();
+    const gameId = useSelector((state: RootState) => state.gameSlice._id);
     const state = useSelector((state: RootState) => state.gameSlice);
     const defender = getDefender(state);
     const onClick = () => {
-        pass(playerId);
+        pass(gameId, playerId);
     }
     const [disabled, setDisabled] = useState(true);
     useEffect(() => {

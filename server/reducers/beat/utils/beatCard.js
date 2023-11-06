@@ -11,7 +11,6 @@ const beatCard = (table, card1, card2, trump) => {
         }
         return cardPair;
     })
-    console.log('newTable', newTable);
     return newTable;
 }
 

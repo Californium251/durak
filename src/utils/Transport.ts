@@ -13,8 +13,8 @@ const promisify = (asyncFn: any) => (...args: any) => {
 
 export type TransportType = {
     socket: Socket;
-    pass: (playerId: string) => Promise<any>;
-    pickUp: () => Promise<any>;
+    pass: (gameId: string, playerId: string) => Promise<any>;
+    pickUp: (gameId: string, playerId: string) => Promise<any>;
     addCard: (gameId: string, playerId: string, card: CardType) => Promise<any>;
     beat: (gameId: string, card1: CardType, card2: CardType, trump: CardType, playerId: string) => Promise<any>;
 }
@@ -24,13 +24,13 @@ class Transport implements TransportType {
     constructor(socket: any) {
         this.socket = socket;
     }
-    pass(playerId: string) {
-        return promisify(socket.emit)('pass', playerId);
+    pass(gameId: string, playerId: string) {
+        return promisify(socket.emit)('pass', { gameId, playerId });
     }
-    pickUp() {
-        return promisify(socket.emit)('pickUp');
+    pickUp(gameId: string, playerId: string) {
+        return promisify(socket.emit)('pickUp', { gameId, playerId });
     }
-    addCard(gameId: string, playerId: string, card: CardType ) {
+    addCard(gameId: string, playerId: string, card: CardType) {
         return promisify(socket.emit)('addCard', { gameId, playerId, card })
     }
     beat(gameId: string, card1: CardType, card2: CardType, trump: CardType, playerId: string) {

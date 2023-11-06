@@ -8,6 +8,7 @@ import callbacks from "./appUtils"
 import { GameType } from '@/utils/Types'
 import { useDispatch } from "react-redux"
 import { initializeGame } from "@/slices/gameSlice"
+import { AuthProvider } from "@/context/AuthContext"
 
 const { passCb, addCardCb, pickUpCb, beatCb } = callbacks;
 
@@ -22,9 +23,11 @@ const App: FC<{ game: GameType }> = ({ game }) => {
     useEffect(() => {
         dispatch(initializeGame(game))
     }, []);
-    return <ApiProvider transport={transport}>
-        <Board />
-    </ApiProvider>
+    return <AuthProvider>
+        <ApiProvider transport={transport}>
+            <Board />
+        </ApiProvider>
+    </AuthProvider>
 }
 
 export default App;

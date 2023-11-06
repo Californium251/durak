@@ -7,26 +7,27 @@ import { areAllCardsBeaten } from "../../utils/utils";
 
 const PickUpButton: FC<{ playerId?: string }> = ({ playerId }) => {
     const { pickUp } = useApi();
+    const gameId = useSelector((state: RootState) => state.gameSlice._id);
     const state = useSelector((state: RootState) => state.gameSlice);
     const defender = getDefender(state);
     const isTableEmpty = useSelector((state: RootState) => state.gameSlice.table.length === 0);
     const [disabled, setDisabled] = useState(true);
     useEffect(() => {
         setDisabled(areAllCardsBeaten(state) || isTableEmpty);
-    })
+    });
     const onClick = () => {
-        pickUp();
+        pickUp(gameId as string, playerId);
     };
     return (<>
         {playerId === defender.playerId
-        ? <button disabled={disabled} style={{
-            width: '180px',
-            height: '60px',
-        }}
-            onClick={onClick}
-        >
-            Взять
-        </button> : null}</>
+            ? <button disabled={disabled} style={{
+                width: '180px',
+                height: '60px',
+            }}
+                onClick={onClick}
+            >
+                Взять
+            </button> : null}</>
     )
 };
 

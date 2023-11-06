@@ -6,7 +6,6 @@ const beat = (game, data) => {
     const { playerId, card1, card2, trump } = data;
     const player = players[playerId];
     const updatedTable = beatCard(table, card1, card2, trump);
-    console.log('updatedTable', updatedTable);
     const updatedPlayer = removeCard(player, card2);
     const updatedPlayers = players.map((p) => {
         if (p.id === playerId) {

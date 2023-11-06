@@ -2,6 +2,8 @@ const { MongoClient } = require('mongodb');
 const getGame = require('./getGame');
 const updateGame = require('./updateGame');
 const createGame = require('./createGame');
+const createUser = require('./createUser');
+const loginUser = require('./loginUser');
 require('dotenv').config()
 
 
@@ -10,23 +12,30 @@ const main = async (action, payload) => {
     const client = new MongoClient(uri);
     try {
         await client.connect();
+        let game;
         switch (action) {
             case 'createGame':
                 const gameId = await createGame(client, payload);
                 return gameId;
             case 'getGame':
-                const game = await getGame(client, payload);
+                game = await getGame(client, payload);
                 return game;
             case 'addCard':
-                const updatedGame = await updateGame(client, payload);
-                return updatedGame;
             case 'beat':
-                const updatedGame2 = await updateGame(client, payload);
-                return updatedGame2;
+            case 'pass':
+            case 'pickUp':
+                game = await updateGame(client, payload);
+                return game;
+            case 'signup':
+                const newUser = await createUser(client, payload);
+                return newUser;
+            case 'login':
+                const user = await loginUser(client, payload);
+                return user;
         }
 
     } catch (e) {
-        console.error(e.message);
+        console.error(e);
     }
 }
 

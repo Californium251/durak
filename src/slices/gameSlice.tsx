@@ -30,11 +30,20 @@ const gameSlice = createSlice({
     initialState,
     reducers: {
         initializeGame: (state, action: PayloadAction<typeof initialState>) => {
-            const { cards, trump, players, activePlayerId, _id, table } = action.payload;
+            const {
+                cards,
+                trump,
+                players,
+                playersPassed,
+                activePlayerId,
+                _id,
+                table
+            } = action.payload;
             state._id = _id;
             state.cards = cards;
             state.trump = trump;
             state.players = players;
+            state.playersPassed = playersPassed;
             state.activePlayerId = activePlayerId;
             state.gameStarted = true;
             state.table = table;
