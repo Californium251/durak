@@ -13,6 +13,7 @@ import Transport from "@/utils/Transport"
 import { socket } from "@/utils/socket"
 
 const App: FC = () => {
+    console.log(process.env.FRONTEND_URL);
     const transport = new Transport();
     const { token } = useAuth().auth;
     const path = usePathname();
