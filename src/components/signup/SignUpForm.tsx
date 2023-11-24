@@ -20,7 +20,7 @@ const SignUpForm = () => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(values.password, salt);
             try {
-                const res = await axios.post('/signup', {
+                const res = await axios.post('http://localhost:5440/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
