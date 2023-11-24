@@ -5,6 +5,7 @@ import { createContext } from 'react';
 import { TransportType } from '../utils/Transport';
 
 const ApiContext = createContext({
+    initGame: (gameId: string) => { },
     pass: (gameId: string, playerId: string) => { },
     pickUp: (gameId: string, playerId: string) => { },
     addCard: (gameId: string, playerId: string, card: CardType) => { },

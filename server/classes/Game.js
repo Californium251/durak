@@ -13,7 +13,6 @@ class Game {
         this.playersPassed = [];
         this.table = [];
         this.gameStarted = false;
-        this.activePlayerId = 0;
     }
     setId(id) {
         this.id = id;

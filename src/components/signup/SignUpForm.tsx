@@ -12,25 +12,28 @@ const SignUpForm = () => {
 
     const formik = useFormik({
         initialValues: {
-            email: '',
-            password: '',
-            passwordConfirm: '',
+            email: 'm@m.m',
+            password: 'mmm',
+            passwordConfirm: 'mmm',
         },
         onSubmit: async (values) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(values.password, salt);
             try {
-                const res = await axios.post('/api/signup', {
+                const res = await axios.post(`/signup`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: values.email, password: hashedPassword })
+                    body: { email: values.email, password: hashedPassword }
                 });
-                login({ username: res.data.username, token: res.data.token });
+                const { email, userId, token } = res.data;
+                login({ email, userId, token });
                 router.push('/');
             } catch (e) {
-                console.error(e.message);
+                if (e instanceof Error) {
+                    console.error(e.message);
+                }
             }
         }
     });

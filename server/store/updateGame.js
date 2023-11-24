@@ -6,7 +6,7 @@ const updateGame = async (client, payload) => {
     const collection = client.db('durak').collection('games');
     const game = await getGame(client, gameId);
     const updatedGame = reducer(game, data);
-    const result = await collection.updateOne(
+    await collection.updateOne(
         { _id: new ObjectId(gameId) },
         { $set: updatedGame }
     );

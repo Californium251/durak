@@ -1,22 +1,37 @@
 const beatCard = require('./utils/beatCard');
 const removeCard = require('../addCard/utils/player/removeCard');
+const onlyOnePlayerHasCards = require('./utils/onlyOnePlayerHasCards');
 
 const beat = (game, data) => {
-    const { players, table } = game;
+    const { players, table, cards, trumpDrawn } = game.data;
     const { playerId, card1, card2, trump } = data;
-    const player = players[playerId];
+    const player = players.find((p) => p.user._id.toString() === playerId);
     const updatedTable = beatCard(table, card1, card2, trump);
     const updatedPlayer = removeCard(player, card2);
     const updatedPlayers = players.map((p) => {
-        if (p.id === playerId) {
+        if (p.user._id.toString() === playerId) {
             return updatedPlayer;
         }
         return p;
     })
+    if (cards.length === 0 && trumpDrawn && onlyOnePlayerHasCards(updatedPlayers)) {
+        return {
+            ...game,
+            data: {
+                ...game.data,
+                players: updatedPlayers,
+                table: updatedTable,
+                gameFinished: true,
+            }
+        };
+    }
     return {
         ...game,
-        players: updatedPlayers,
-        table: updatedTable,
+        data: {
+            ...game.data,
+            players: updatedPlayers,
+            table: updatedTable,
+        }
     };
 }
 

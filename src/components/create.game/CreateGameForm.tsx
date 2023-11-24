@@ -2,8 +2,13 @@
 import { useFormik, Form, Field, FormikProvider } from 'formik';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import useAuth from '@/hooks/useAuth';
+import { useDispatch } from 'react-redux';
+import { createGame } from '@/slices/gameSlice';
 
 const CreateGameForm = () => {
+    const dispatch = useDispatch();
+    const { auth } = useAuth();
     const router = useRouter();
     const formik = useFormik({
         initialValues: {
@@ -15,14 +20,18 @@ const CreateGameForm = () => {
             isPrivate: false,
         },
         onSubmit: async (values) => {
-            const res = await axios.post('/api/create-game', {
+            const res = await axios.post(`${process.env.SOCKET_IO_URL}/create-game`, {
+                ...values,
+                creator: auth.userId,
+            }, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values)
+                    'Authorization': `Bearer ${auth.token}`,
+                }
             });
-            router.push(`/game/${res.data.game._id}`);
+            dispatch(createGame(res.data));
+            router.push(`/game/${res.data._id}`);
         },
     });
     return <>

@@ -1,8 +1,7 @@
-// 'use client'
+'use client'
 import { CardType } from "./Types";
 import { socket } from './socket';
 import { Socket } from 'socket.io-client';
-import { DefaultEventsMap } from "@socket.io/component-emitter";
 
 const promisify = (asyncFn: any) => (...args: any) => {
     const promise = new Promise((resolve, reject) => {
@@ -12,7 +11,7 @@ const promisify = (asyncFn: any) => (...args: any) => {
 };
 
 export type TransportType = {
-    socket: Socket;
+    initGame: (gameId: string) => Promise<any>;
     pass: (gameId: string, playerId: string) => Promise<any>;
     pickUp: (gameId: string, playerId: string) => Promise<any>;
     addCard: (gameId: string, playerId: string, card: CardType) => Promise<any>;
@@ -20,21 +19,20 @@ export type TransportType = {
 }
 
 class Transport implements TransportType {
-    socket: Socket<DefaultEventsMap, DefaultEventsMap>;
-    constructor(socket: any) {
-        this.socket = socket;
+    initGame = (gameId: string) => {
+        return promisify(socket.emit)('initGame', gameId);
     }
-    pass(gameId: string, playerId: string) {
+    pass = (gameId: string, playerId: string) => {
         return promisify(socket.emit)('pass', { gameId, playerId });
     }
-    pickUp(gameId: string, playerId: string) {
+    pickUp = (gameId: string, playerId: string) => {
         return promisify(socket.emit)('pickUp', { gameId, playerId });
-    }
-    addCard(gameId: string, playerId: string, card: CardType) {
+    }   
+    addCard = (gameId: string, playerId: string, card: CardType) => {
         return promisify(socket.emit)('addCard', { gameId, playerId, card })
     }
-    beat(gameId: string, card1: CardType, card2: CardType, trump: CardType, playerId: string) {
-        return promisify(socket.emit)('beat', gameId, card1, card2, trump, playerId);
+    beat = (gameId: string, card1: CardType, card2: CardType, trump: CardType, playerId: string) => {
+        return promisify(socket.emit)('beat', { gameId, card1, card2, trump, playerId });
     }
 };
 

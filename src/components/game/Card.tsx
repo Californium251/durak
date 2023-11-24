@@ -2,7 +2,7 @@ import React, { FC, PropsWithChildren } from "react";
 import Image from "next/image";
 import { CardType } from "../../utils/Types";
 
-const Card: FC<PropsWithChildren<CardType>> = ({ suit, rank, onClick = () => {}, ...props }) => {
+const Card: FC<PropsWithChildren<CardType & { onMouseEnter?: () => void }>> = ({ suit, rank, onClick = () => {}, ...props }) => {
     return (
         <Image
             {...props}

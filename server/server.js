@@ -1,83 +1,114 @@
+const express = require('express');
+const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
-const createGame = require('./store/createGame');
 const beat = require('./reducers/beat/beat');
 const addCard = require('./reducers/addCard/addCard');
 const pass = require('./reducers/pass/pass');
-const pickUp = require('./reducers/pickUp/pickUp')
+const pickUp = require('./reducers/pickUp/pickUp');
 const main = require('./store/dbClient');
+const joinGame = require('./store/joinGame/joinGame');
+const authenticateToken = require('./middlewares/authenticateToken');
+const makeReady = require('./store/makeReady');
 
-const server = http.createServer(async (req, res) => {
-    if (req.method === 'POST' && req.url === '/create-game') {
-        try {
-            let body = '';
-            req.on('data', (chunk) => {
-                body += chunk.toString();
-            });
-            req.on('end', async () => {
-                const parsedData = JSON.parse(body);
-                const gameId = await main('createGame', parsedData);
-                const game = await main('getGame', gameId);
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(game))
-            })
-        } catch (e) {
-            res.writeHead(500);
-            res.end();
-        }
-    }
-    if (req.method === 'GET' && req.url.startsWith('/get-game')) {
-        try {
-            const gameId = req.url.split('/').at(-1);
-            const gameState = await main('getGame', gameId);
-            res.end(JSON.stringify(gameState));
-        } catch (e) {
-            res.end(JSON.stringify({ message: 'error' }))
-        }
-    }
-    if (req.method === 'POST' && req.url === '/signup') {
-        let body = '';
-        req.on('data', (chunk) => {
-            body += chunk.toString();
-        });
-        req.on('end', async () => {
-            const parsedData = JSON.parse(body);
-            try {
-                const user = await main('signup', parsedData);
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(user));
-            } catch(e) {
-                console.error(e.message);
-            }
-        })
-    }
-    if (req.method === 'POST' && req.url === '/login') {
-        let body = '';
-        req.on('data', (chunk) => {
-            body += chunk.toString();
-        });
-        req.on('end', async () => {
-            const parsedData = JSON.parse(body);
-            try {
-                const user = await main('login', parsedData);
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(user));
-            } catch(e) {
-                console.error(e.message);
-            }
-        })
+const app = express();
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200
+}
+
+app.use(express.json());
+app.use(cors(corsOptions));
+app.get('/get-game', authenticateToken, async (req, res) => {
+    try {
+        const gameId = req.query.id;
+        const gameState = await main('getGame', gameId);
+        res.send(gameState);
+    } catch (e) {
+        res.send({ message: e.message })
     }
 });
+
+app.post('/create-game', authenticateToken, async (req, res) => {
+    try {
+        const { body } = req;
+        const game = await main('createGame', body);
+        res.send(game)
+    } catch (e) {
+        res.send({ message: e.message })
+    }
+});
+
+app.post('/join-game', authenticateToken, async (req, res) => {
+    try {
+        const { body } = req;
+        const game = await main('joinGame', {
+            gameId: body.gameId,
+            reducer: joinGame,
+            data: {
+                username: body.username,
+            }
+        });
+        res.send(game);
+    } catch (e) {
+        res.send({ message: e.message })
+    }
+})
+
+app.post('/signup', async (req, res) => {
+    const { body } = req;
+    try {
+        const user = await main('signup', body);
+        res.send(user);
+    } catch (e) {
+        res.send({ message: e.message })
+    }
+});
+
+app.post('/login', async (req, res) => {
+    const { body } = req;
+    try {
+        const user = await main('login', body);
+        res.send(user);
+    } catch (e) {
+        res.send({ message: e.message });
+    }
+});
+
+app.post('/ready', authenticateToken, async (req, res) => {
+    try {
+        const { gameId, userId } = req.body;
+        const game = await main('makeReady', {
+            gameId,
+            reducer: makeReady,
+            data: {
+                userId,
+            }
+        })
+        res.send(game);
+    } catch (e) {
+        res.send({ message: e.message });
+    }
+});
+
+const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: process.env.NEXT_PUBLIC_SERVER_ADDRESS,
+        origin: process.env.FRONTEND_URL,
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
     },
 });
-
 io.on('connection', (socket) => {
     console.log('a user connected');
+    // try {
+    //     const token = socket.handshake.query.token;
+    //     const decoded = jwt.verify(token, 'secret');
+    //     socket.user = decoded;
+    // } catch (error) {
+    //     socket.disconnect();
+    // }
     socket.on('pass', async ({ gameId, playerId }) => {
         const newGame = await main('pass', {
             gameId,
@@ -86,7 +117,7 @@ io.on('connection', (socket) => {
                 playerId,
             }
         })
-        io.emit('pass', playerId);
+        io.emit('pass', newGame);
     });
     socket.on('addCard', async (args) => {
         const { gameId, playerId, card } = args;
@@ -98,27 +129,27 @@ io.on('connection', (socket) => {
             }
         });
         const newGame = await main('getGame', gameId);
-        io.emit('addCard', { playerId, card });
+        io.emit('addCard', JSON.stringify(newGame));
     });
     socket.on('pickUp', async ({ gameId, playerId }) => {
-        await main('pickUp', {
+        const updatedGame = await main('pickUp', {
             gameId,
             reducer: pickUp,
             data: {
                 playerId,
             }
         })
-        io.emit('pickUp');
+        io.emit('pickUp', updatedGame);
     })
-    socket.on('beat', async (gameId, card1, card2, trump, playerId) => {
-        await main('beat', {
+    socket.on('beat', async ({ gameId, card1, card2, trump, playerId }) => {
+        const updatedGame = await main('beat', {
             gameId,
             reducer: beat,
             data: {
                 playerId, card1, card2, trump,
             }
         });
-        io.emit('beat', { card1, card2 });
+        io.emit('beat', updatedGame);
     })
 });
 

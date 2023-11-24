@@ -1,5 +1,3 @@
-import { PlayerType } from "@/components/game/Player";
-
 export type CardType = {
     suit: string,
     rank: string,
@@ -21,9 +19,10 @@ export type GameOptionsType = {
     speed: string,
     mode: string,
     isPrivate: boolean,
+    creator: string,
 }
 
-export type GameType = {
+export type GameDataType = {
     _id?: string,
     cards: Array<CardType>,
     trump: CardType,
@@ -32,5 +31,22 @@ export type GameType = {
     playersPassed: Array<string>,
     table: Array<Array<CardType>>,
     gameStarted: boolean,
-    activePlayerId?: string,
+    attackerId?: string,
+    gameFinished: boolean,
+}
+
+export type GameType = {
+    _id: string,
+    options: GameOptionsType,
+    data: GameDataType,
+}
+
+export type PlayerType = {
+    cards: CardType[],
+    activePlayer?: boolean,
+    isReady?: boolean,
+    user: {
+        email: string,
+        _id: string,
+    }
 }

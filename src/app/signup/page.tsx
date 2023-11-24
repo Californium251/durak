@@ -1,15 +1,19 @@
 'use client'
 import SignUpForm from '@/components/signup/SignUpForm';
-import { AuthProvider } from '@/context/AuthContext';
+import useAuth from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 const SignupPage = () => {
+  const { auth } = useAuth();
+    const router = useRouter();
+    if (auth.token) {
+        router.push('/');
+    }
   return (
-    <AuthProvider>
-      <div>
-        <h1>Signup</h1>
-        <SignUpForm />
-      </div>
-    </AuthProvider>
+    <div>
+      <h1>Signup</h1>
+      <SignUpForm />
+    </div>
   )
 }
 

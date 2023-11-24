@@ -1,37 +1,43 @@
-import { FC, PropsWithChildren, createContext, useState } from 'react';
+'use client'
+import { FC, PropsWithChildren, createContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
     auth: AuthType,
-    login: ({ username, token }: AuthType) => void,
+    login: ({ email, userId, token }: AuthType) => void,
     logout: () => void,
 }
 
 const AuthContext = createContext<AuthContextType>({
-    auth: { token: null, username: null },
+    auth: { token: null, userId: null, email: null },
     login: () => { },
     logout: () => { },
 });
 
 type AuthType = {
     token: string | null,
-    username: string | null,
+    userId: string | null,
+    email: string | null,
 }
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
-    const token = window.localStorage.getItem('token');
-    const username = window.localStorage.getItem('username');
-    const [auth, setAuth] = useState<AuthType>({ token, username });
-    const login = ({ username, token }: AuthType) => {
-        console.log('login', username, token);
-        window.localStorage.setItem('username', username as string);
+    const [auth, setAuth] = useState<AuthType>({ token: null, email: null, userId: null });
+    useEffect(() => {
+        const token = window.localStorage.getItem('token');
+        const email = window.localStorage.getItem('email');
+        const userId = window.localStorage.getItem('userId');
+        setAuth({ token, email, userId });
+    }, [])
+    const login = ({ token, email, userId }: AuthType) => {
+        window.localStorage.setItem('email', email as string);
         window.localStorage.setItem('token', token as string);
-        setAuth({ username, token });
-        console.log('auth', auth)
+        window.localStorage.setItem('userId', userId as string);
+        setAuth({ token, email, userId });
     };
     const logout = () => {
         window.localStorage.removeItem('token');
-        window.localStorage.removeItem('username');
-        setAuth({ token: null, username: null });
+        window.localStorage.removeItem('email');
+        window.localStorage.removeItem('userId');
+        setAuth({ token: null, email: null, userId: null });
     };
     return <AuthContext.Provider value={{ auth, login, logout }}>
         {children}

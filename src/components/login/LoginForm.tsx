@@ -15,17 +15,18 @@ const LoginForm = () => {
         },
         onSubmit: async (values) => {
             try {
-                const res = await axios.post('/api/login', {
+                const res = await axios.post(`${process.env.SOCKET_IO_URL}/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ email: values.email, password: values.password })
+                    body: { email: values.email, password: values.password }
                 })
-                login({ username: res.data.username, token: res.data.token });
+                const { email, userId, token } = res.data;
+                login({ email, userId, token });
                 router.push('/');
             } catch (e) {
-                console.error('login error:', e.message);
+                console.error('login error:', e);
             }
 
         }

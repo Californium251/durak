@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import useAuth from '@/hooks/useAuth';
-import Container from './container';
+import Container from './Container';
 
 const MainPage = () => {
     const { auth, logout } = useAuth();

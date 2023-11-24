@@ -48,16 +48,25 @@ const setDeck = () => {
     return shuffleDeck(cards);
 };
 
-class Deck {
-    constructor() {
-        this.cards = setDeck();
+const initGame = (game) => {
+    const cards = setDeck();
+    const { players } = game.data;
+    const updatedPlayers = players.map((p) => {
+        p.cards = cards.splice(0, 6);
+        return p;
+    });
+    const trump = cards.pop();
+    return {
+        ...game,
+        data: {
+            ...game.data,
+            cards,
+            players: updatedPlayers,
+            trump,
+            gameStarted: true,
+            attackerId: players[0].user._id.toString(),
+        }
     }
-    getCards() {
-        return this.cards;
-    }
-    removeTopCard() {
-        return this.cards.pop();
-    }
-}
+};
 
-module.exports = Deck;
+module.exports = initGame;
