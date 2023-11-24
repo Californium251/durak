@@ -12,15 +12,15 @@ const SignUpForm = () => {
 
     const formik = useFormik({
         initialValues: {
-            email: 'm@m.m',
-            password: 'mmm',
-            passwordConfirm: 'mmm',
+            email: '',
+            password: '',
+            passwordConfirm: '',
         },
         onSubmit: async (values) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(values.password, salt);
             try {
-                const res = await axios.post(`/signup`, {
+                const res = await axios.post('/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

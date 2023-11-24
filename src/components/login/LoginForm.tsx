@@ -15,7 +15,7 @@ const LoginForm = () => {
         },
         onSubmit: async (values) => {
             try {
-                const res = await axios.post(`${process.env.SOCKET_IO_URL}/login`, {
+                const res = await axios.post('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

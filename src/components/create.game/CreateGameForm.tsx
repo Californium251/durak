@@ -20,7 +20,7 @@ const CreateGameForm = () => {
             isPrivate: false,
         },
         onSubmit: async (values) => {
-            const res = await axios.post(`${process.env.SOCKET_IO_URL}/create-game`, {
+            const res = await axios.post('/create-game', {
                 ...values,
                 creator: auth.userId,
             }, {

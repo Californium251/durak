@@ -17,7 +17,7 @@ const JoinGameForm = () => {
             username: '',
         },
         onSubmit: async (values) => {
-            const res = await axios.post(`${process.env.SOCKET_IO_URL}/join-game`,
+            const res = await axios.post('/join-game',
                 {
                     ...values,
                     username: auth.email,

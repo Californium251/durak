@@ -35,7 +35,7 @@ const App: FC = () => {
         if (!token) return;
         const getGameData = async () => {
             const id = path.split('/').at(-1);
-            const { data } = await axios.get(`${process.env.SOCKET_IO_URL}/get-game`, {
+            const { data } = await axios.get('/get-game', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
