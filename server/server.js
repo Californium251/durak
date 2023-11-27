@@ -10,11 +10,14 @@ const main = require('./store/dbClient');
 const joinGame = require('./store/joinGame/joinGame');
 const authenticateToken = require('./middlewares/authenticateToken');
 const makeReady = require('./store/makeReady');
+require('dotenv').config();
+
+const frontendUrl = process.env.FRONTEND_URL || 'localhost:3000';
 
 const app = express();
 
 const corsOptions = {
-    origin: 'http://localhost:3000',
+    origin: frontendUrl,
     optionsSuccessStatus: 200
 }
 
