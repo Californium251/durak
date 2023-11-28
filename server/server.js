@@ -15,6 +15,7 @@ require('dotenv').config();
 const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || 'localhost:3000';
 
 const app = express();
+console.log('frontendUrl', frontendUrl);
 
 const corsOptions = {
     origin: frontendUrl,
