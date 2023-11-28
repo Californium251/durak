@@ -16,8 +16,9 @@ const PreBoard = () => {
     const { initGame } = useApi();
     const dispatch = useDispatch();
     const roomIsFull = players.every(p => p.user !== null);
+    const serverUrl = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const makeReady = async () => {
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL}/ready`, {
+        const res = await axios.post(`${serverUrl}/ready`, {
             gameId: _id,
             userId: auth.userId,
         }, {

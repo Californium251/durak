@@ -10,7 +10,6 @@ import useAuth from '@/hooks/useAuth';
 
 const Board = () => {
     const { userId } = useAuth().auth;
-    const attackerId = useSelector((state: RootState) => state.gameSlice.data.attackerId);
     const [cardBuffer, setCardBuffer] = useState<CardBufferType>(null);
     return (
         <>
