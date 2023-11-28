@@ -22,6 +22,10 @@ const corsOptions = {
     optionsSuccessStatus: 200
 }
 
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
 app.use(express.json());
 app.use(cors(corsOptions));
 app.get('/get-game', authenticateToken, async (req, res) => {
