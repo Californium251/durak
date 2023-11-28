@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 const LoginForm = () => {
     const { login } = useAuth();
     const router = useRouter();
-    const serverAddress = process.env.SOCKET_IO_URL || 'http://localhost:3001';
+    const serverAddress = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const formik = useFormik({
         initialValues: {
             email: '',

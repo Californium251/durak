@@ -12,7 +12,7 @@ const authenticateToken = require('./middlewares/authenticateToken');
 const makeReady = require('./store/makeReady');
 require('dotenv').config();
 
-const frontendUrl = process.env.FRONTEND_URL || 'localhost:3000';
+const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || 'localhost:3000';
 
 const app = express();
 
@@ -99,7 +99,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL,
+        origin: process.env.NEXT_PUBLIC_FRONTEND_URL,
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
     },
 });
