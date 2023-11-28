@@ -32,7 +32,7 @@ export const fetchGameData = createAsyncThunk('game/fetchGameData', async () => 
     try {
         const id = window.location.href.split('/').at(-1);
         const jwtToken = localStorage.getItem('jwtToken');
-        const response = await axios.get(`${process.env.SOCKET_IO_URL}/get-game`, {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL}/get-game`, {
             headers: {
                 Authorization: `Bearer ${jwtToken}`
             },

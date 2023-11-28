@@ -17,7 +17,7 @@ const PreBoard = () => {
     const dispatch = useDispatch();
     const roomIsFull = players.every(p => p.user !== null);
     const makeReady = async () => {
-        const res = await axios.post(`${process.env.SOCKET_IO_URL}/ready`, {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL}/ready`, {
             gameId: _id,
             userId: auth.userId,
         }, {

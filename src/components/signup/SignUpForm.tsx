@@ -9,7 +9,7 @@ import bcrypt from 'bcryptjs'
 const SignUpForm = () => {
     const router = useRouter();
     const { login } = useAuth();
-    const serverAddress = process.env.SOCKET_IO_URL || 'http://localhost:3001';
+    const serverAddress = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
 
     const formik = useFormik({
         initialValues: {
@@ -20,7 +20,7 @@ const SignUpForm = () => {
         onSubmit: async (values) => {
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(values.password, salt);
-            console.log(process.env.SOCKET_IO_URL);
+            console.log(process.env.NEXT_PUBLIC_SOCKET_IO_URL);
             try {
                 const res = await axios.post(`${serverAddress}/signup`, {
                     method: 'POST',
