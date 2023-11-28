@@ -8,6 +8,7 @@ const joinGame = require('./joinGame/joinGame');
 
 const main = async (action, payload) => {
     const uri = process.env.NEXT_PUBLIC_MONGO_URI || 'mongodb://127.0.0.1:27017/';
+    console.log('uri', uri);
     const client = new MongoClient(uri);
     try {
         await client.connect();

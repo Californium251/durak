@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 const LoginForm = () => {
     const { login } = useAuth();
     const router = useRouter();
+    const serverAddress = process.env.SOCKET_IO_URL || 'http://localhost:3001';
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -15,7 +16,7 @@ const LoginForm = () => {
         },
         onSubmit: async (values) => {
             try {
-                const res = await axios.post('/login', {
+                const res = await axios.post(`${serverAddress}/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

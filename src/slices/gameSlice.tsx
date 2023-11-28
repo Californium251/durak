@@ -49,6 +49,7 @@ const gameSlice = createSlice({
     initialState,
     reducers: {
         createGame: (state, action: PayloadAction<typeof initialState>) => {
+            console.log(action.payload);
             const { options, _id, data } = action.payload;
             state._id = _id;
             state.options = options;
