@@ -15,16 +15,11 @@ require('dotenv').config();
 const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_URL || 'localhost:3000';
 
 const app = express();
-console.log('frontendUrl', frontendUrl);
 
 const corsOptions = {
     origin: frontendUrl,
     optionsSuccessStatus: 200
 }
-
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
 
 app.use(express.json());
 app.use(cors(corsOptions));
@@ -104,7 +99,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: process.env.NEXT_PUBLIC_FRONTEND_URL,
+        origin: frontendUrl,
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
     },
 });
@@ -128,6 +123,7 @@ io.on('connection', (socket) => {
         io.emit('pass', newGame);
     });
     socket.on('addCard', async (args) => {
+        console.log('addCard', 'Add card function called')
         const { gameId, playerId, card } = args;
         await main('addCard', {
             gameId,
