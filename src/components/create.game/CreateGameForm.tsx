@@ -10,6 +10,7 @@ const CreateGameForm = () => {
     const dispatch = useDispatch();
     const { auth } = useAuth();
     const router = useRouter();
+    const serverAddress = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const formik = useFormik({
         initialValues: {
             bid: 100,
@@ -20,7 +21,7 @@ const CreateGameForm = () => {
             isPrivate: false,
         },
         onSubmit: async (values) => {
-            const res = await axios.post('/create-game', {
+            const res = await axios.post(`${serverAddress}/create-game`, {
                 ...values,
                 creator: auth.userId,
             }, {

@@ -11,13 +11,14 @@ const JoinGameForm = () => {
     const { auth } = useAuth();
     const router = useRouter();
     const dispatch = useDispatch();
+    const serverAddress = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const formik = useFormik({
         initialValues: {
             gameId: '',
             username: '',
         },
         onSubmit: async (values) => {
-            const res = await axios.post('/join-game',
+            const res = await axios.post(`${serverAddress}/join-game`,
                 {
                     ...values,
                     username: auth.email,
