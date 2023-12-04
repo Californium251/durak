@@ -23,15 +23,20 @@ const Player: FC<{
     setCardBuffer: Dispatch<SetStateAction<CardBufferType>>
 }> = ({ playerId, setCardBuffer }) => {
     const { addCard } = useApi();
+    const [cardIsLoading, setCardIsLoading] = useState<boolean>(false);
     const gameId = useSelector((state: RootState) => state.gameSlice._id);
     const { players, attackerId, playersPassed } = useSelector((state: RootState) => state.gameSlice.data);
     const player: PlayerType = players.find((p) => p.user._id === playerId) as PlayerType;
     const defender = players[(players.findIndex((p) => p.user._id === attackerId) + 1) % players.length];
     const onClick = (card: CardType) => () => {
-        if (playerId === defender.user._id) {
-            setCardBuffer({ playerId, card });
-        } else {
-            addCard(gameId, playerId, card)
+        setCardIsLoading(true);
+        if (!cardIsLoading) {
+            if (playerId === defender.user._id) {
+                setCardBuffer({ playerId, card });
+            } else {
+                addCard(gameId, playerId, card)
+            }
+            setCardIsLoading(false);
         }
     };
     const playersName = players.find((p) => p.user._id === playerId)?.user.email;
