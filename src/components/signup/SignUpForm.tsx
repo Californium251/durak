@@ -13,7 +13,7 @@ const SignUpForm = () => {
 
     const formik = useFormik({
         initialValues: {
-            email: '',
+            name: '',
             password: '',
             passwordConfirm: '',
         },
@@ -26,10 +26,10 @@ const SignUpForm = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: { email: values.email, password: hashedPassword }
+                    body: { name: values.name, password: hashedPassword }
                 });
-                const { email, userId, token } = res.data;
-                login({ email, userId, token });
+                const { name, userId, token } = res.data;
+                login({ name, userId, token });
                 router.push('/');
             } catch (e) {
                 if (e instanceof Error) {
@@ -40,8 +40,8 @@ const SignUpForm = () => {
     });
     return (
         <form onSubmit={formik.handleSubmit}>
-            <label htmlFor='email'>Email:
-                <input type='email' name='email' onChange={formik.handleChange} value={formik.values.email} />
+            <label htmlFor='name'>name:
+                <input type='name' name='name' onChange={formik.handleChange} value={formik.values.name} />
             </label>
             <label htmlFor='password'>Password:
                 <input type='password' name='password' onChange={formik.handleChange} value={formik.values.password} />

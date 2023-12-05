@@ -50,7 +50,8 @@ app.post('/join-game', authenticateToken, async (req, res) => {
             gameId: body.gameId,
             reducer: joinGame,
             data: {
-                username: body.username,
+                name: body.name,
+                userId: body.userId,
             }
         });
         res.send(game);

@@ -12,12 +12,12 @@ describe('createUser', () => {
         bcrypt.genSalt(10).then((salt) => {
             let client;
             const body = {
-                email: 'test@test.com',
+                name: 'test@test.com',
                 password: bcrypt.hashSync('test', salt),
             }
             const user = createUser(client, body);
             expect(user).toHaveProperty('userId');
-            expect(user.email).toEqual(body.email);
+            expect(user.name).toEqual(body.name);
             expect(user).toHaveProperty('token');
         })
     });

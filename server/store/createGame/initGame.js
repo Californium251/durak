@@ -49,7 +49,6 @@ const setDeck = () => {
 };
 
 const initGame = (game) => {
-    console.log(game);
     const cards = setDeck();
     const { players } = game.data;
     const updatedPlayers = players.map((p) => {

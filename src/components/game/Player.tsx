@@ -39,7 +39,7 @@ const Player: FC<{
             setCardIsLoading(false);
         }
     };
-    const playersName = players.find((p) => p.user._id === playerId)?.user.email;
+    const playersName = players.find((p) => p.user._id === playerId)?.user.name;
     const [cardHover, setCardHover] = useState<CardType>(null);
     const passAllowed = useSelector((state: RootState) => {
         if (playerId === defender.user._id) {

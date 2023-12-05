@@ -47,7 +47,7 @@ const PreBoard = () => {
                 height: '100vh',
             }}>
                 {players.map((p, i) => (
-                    <PlayersAvatar key={i} name={p.user ? p.user.email : 'No player yet'} />
+                    <PlayersAvatar key={i} name={p.user ? p.user.name : 'No player yet'} />
                 ))}
             </div>
             <button style={{ width: '200px' }} disabled={!roomIsFull} onClick={makeReady}>Готов</button>

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { createGame } from '@/slices/gameSlice';
+import { Form, Button } from 'react-bootstrap';
 
 const JoinGameForm = () => {
     const { auth } = useAuth();
@@ -15,13 +16,13 @@ const JoinGameForm = () => {
     const formik = useFormik({
         initialValues: {
             gameId: '',
-            username: '',
+            name: '',
         },
         onSubmit: async (values) => {
             const res = await axios.post(`${serverAddress}/join-game`,
                 {
                     ...values,
-                    username: auth.email,
+                    name: auth.name,
                     userId: auth.userId,
                 },
                 {
@@ -36,19 +37,21 @@ const JoinGameForm = () => {
         },
     });
     return (auth.token &&
-        <div>
-            <form onSubmit={formik.handleSubmit}>
-                <label htmlFor='gameId'>Game ID: </label>
-                <input
-                    id='gameId'
-                    name='gameId'
-                    type='text'
-                    onChange={formik.handleChange}
-                    value={formik.values.gameId}
-                />
-                <button type='submit'>Join</button>
-            </form>
-        </div>
+        <Form onSubmit={formik.handleSubmit} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '200px',
+        }}>
+            <label htmlFor='gameId'>Game ID: </label>
+            <input
+                id='gameId'
+                name='gameId'
+                type='text'
+                onChange={formik.handleChange}
+                value={formik.values.gameId}
+            />
+            <Button type='submit'>Join</Button>
+        </Form>
     );
 };
 

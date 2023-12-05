@@ -46,7 +46,7 @@ export type PlayerType = {
     activePlayer?: boolean,
     isReady?: boolean,
     user: {
-        email: string,
+        name: string,
         _id: string,
     }
 }

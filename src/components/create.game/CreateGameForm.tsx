@@ -1,15 +1,19 @@
 'use client'
-import { useFormik, Form, Field, FormikProvider } from 'formik';
+import { useState } from 'react';
+import { useFormik, Field, FormikProvider } from 'formik';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import useAuth from '@/hooks/useAuth';
 import { useDispatch } from 'react-redux';
 import { createGame } from '@/slices/gameSlice';
+import { ToggleButton, Form, ToggleButtonGroup, Button, Stack, Container } from 'react-bootstrap';
 
 const CreateGameForm = () => {
     const dispatch = useDispatch();
     const { auth } = useAuth();
     const router = useRouter();
+    const [numberOfPlayers, setNumberOfPlayers] = useState<number>(2);
+    const handleToggleButton = (val: number) => setNumberOfPlayers(val);
     const serverAddress = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const formik = useFormik({
         initialValues: {
@@ -24,6 +28,7 @@ const CreateGameForm = () => {
             const res = await axios.post(`${serverAddress}/create-game`, {
                 ...values,
                 creator: auth.userId,
+                numberOfPlayers,
             }, {
                 method: 'POST',
                 headers: {
@@ -35,53 +40,45 @@ const CreateGameForm = () => {
             router.push(`/game/${res.data._id}`);
         },
     });
-    return <>
-        <FormikProvider value={formik}>
-            <form onSubmit={formik.handleSubmit} style={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '200px',
+    return <FormikProvider value={formik}>
+        <Form onSubmit={formik.handleSubmit} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '200px',
+        }}>
+            <Container fluid className='align-items-center justify-content-center' style={{
+                border: '1px solid black',
+                borderRadius: '5px',
+                minWidth: '300px',
+                padding: '10px',
             }}>
-                <label htmlFor='bid'>Ставка:
-                    <Field as='select' name='bid' onChange={formik.handleChange}>
-                        <option value={0}>100</option>
-                        <option value={1}>250</option>
-                        <option value={2}>500</option>
-                        <option value={3}>1000</option>
-                    </Field>
-                </label>
-                <label htmlFor='numberOfPlayers'>Количество игроков:
-                    <Field as='select' name='numberOfPlayers' onChange={formik.handleChange}>
-                        <option value={2}>2</option>
-                        <option value={3}>3</option>
-                        <option value={4}>4</option>
-                    </Field>
-                </label>
-                <label htmlFor='deckSize'>Размер колоды:
-                    <Field as='select' name='deckSize' onChange={formik.handleChange}>
-                        <option value={0}>36</option>
-                        <option value={1}>52</option>
-                    </Field>
-                </label>
-                <label htmlFor='speed'>Скорость игры:
-                    <Field as='select' name='speed' onChange={formik.handleChange}>
-                        <option value={0}>Fast</option>
-                        <option value={1}>Slow</option>
-                    </Field>
-                </label>
-                <label htmlFor='mode'>Режим игры:
-                    <Field as='select' name='mode' onChange={formik.handleChange}>
-                        <option value='throw-in'>Throw-in</option>
-                        <option value='transferrable'>Transferrable</option>
-                    </Field>
-                </label>
-                <label htmlFor='isPrivate'>Приватная игра:
-                    <Field type='checkbox' name='isPrivate' value='Приватная игра' onChange={formik.handleChange} />
-                </label>
-                <button type='submit'>Создать игру</button>
-            </form>
-        </FormikProvider>
-    </>
+                <Stack direction="vertical" gap={3}>
+                    <h1>Создать игру</h1>
+                    <Form.Text>
+                        Количество игроков
+                    </Form.Text>
+                    <ToggleButtonGroup
+                        type="radio"
+                        name="numberOfPlayers"
+                        defaultValue={2}
+                        onChange={handleToggleButton}
+                    >
+                        <ToggleButton id="tbg-radio-1" value={2}>
+                            2
+                        </ToggleButton>
+                        <ToggleButton id="tbg-radio-2" value={3}>
+                            3
+                        </ToggleButton>
+                        <ToggleButton id="tbg-radio-3" value={4}>
+                            4
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                    <Button type='submit' className='mb-2'>Создать игру</Button>
+                </Stack>
+            </Container>
+        </Form>
+    </FormikProvider>
+
 
 };
 

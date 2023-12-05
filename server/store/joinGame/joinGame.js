@@ -2,16 +2,18 @@ const ObjectId = require('mongodb').ObjectId;
 
 const joinGame = async (client, payload) => {
     const { gameId } = payload;
-    const { username } = payload.data;
+    const { userId } = payload.data;
     try {
         const db = client.db('durak');
         const usersCollection = db.collection('users');
         const gamesCollection = db.collection('games');
-        const { _id, email } = await usersCollection.findOne({ email: username });
+        const { _id, name } = await usersCollection.findOne({ _id: new ObjectId(userId) });
         const game = await gamesCollection.findOne({ _id: new ObjectId(gameId) });
+        console.log('game', game.data.players);
         const emptyPlayer = game.data.players.find(p => p.user === null)
+        console.log('emptyPlayer', emptyPlayer)
         if (emptyPlayer) {
-            emptyPlayer.user = { email, _id };
+            emptyPlayer.user = { name, _id };
             await gamesCollection.updateOne(
                 { _id: new ObjectId(gameId) },
                 { $set: game }

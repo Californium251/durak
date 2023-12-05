@@ -11,7 +11,7 @@ const LoginForm = () => {
     const serverAddress = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const formik = useFormik({
         initialValues: {
-            email: '',
+            name: '',
             password: ''
         },
         onSubmit: async (values) => {
@@ -21,10 +21,10 @@ const LoginForm = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: { email: values.email, password: values.password }
+                    body: { name: values.name, password: values.password }
                 })
-                const { email, userId, token } = res.data;
-                login({ email, userId, token });
+                const { name, userId, token } = res.data;
+                login({ name, userId, token });
                 router.push('/');
             } catch (e) {
                 console.error('login error:', e);
@@ -34,8 +34,8 @@ const LoginForm = () => {
     });
     return (
         <form onSubmit={formik.handleSubmit}>
-            <label htmlFor='email' onChange={formik.handleChange}>Email:
-                <input type='email' name='email' />
+            <label htmlFor='name' onChange={formik.handleChange}>name:
+                <input type='name' name='name' />
             </label>
             <label htmlFor='password' onChange={formik.handleChange}>Password:
                 <input type='password' name='password' />
