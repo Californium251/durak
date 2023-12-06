@@ -29,6 +29,7 @@ export type GameDataType = {
     trumpDrawn: boolean,
     players: Array<PlayerType>,
     playersPassed: Array<string>,
+    allPlayersCanAdd: boolean,
     table: Array<Array<CardType>>,
     gameStarted: boolean,
     attackerId?: string,

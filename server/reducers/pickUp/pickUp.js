@@ -17,6 +17,7 @@ const pickUp = (game, data) => {
             ...game.data,
             table: [],
             players: updatedAttackers,
+            allPlayersCanAdd: false,
             attackerId: players[updatedAttackerIndex].user._id.toString(),
         }
     }

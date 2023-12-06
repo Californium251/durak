@@ -12,11 +12,11 @@ const PassButton: FC<{ playerId: string }> = ({ playerId }) => {
         return state.gameSlice.data.players[(attackerIndex + 1) % state.gameSlice.data.players.length];
     });
     const areAllCardsBeaten = useSelector((state: RootState) => table.length === 0 ? false : table.reduce((acc, cardPair) => {
-        if (cardPair[1]) {
-            return true;
+        if (!cardPair[1]) {
+            return false;
         }
         return acc;
-    }, false));
+    }, true));
     useEffect(() => {
         setDisabled(!areAllCardsBeaten);
     }, [table]);

@@ -17,7 +17,7 @@ const PostBoard = () => {
             Game finished
         </h1>
         {gameFinished && <div>
-            Looser: {looser?.user.name}
+            {looser?.user.name} — дурак!
         </div>}
         <Link href={'/'}>
             <button>Back to lobby</button>

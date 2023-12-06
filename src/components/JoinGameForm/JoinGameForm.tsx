@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { createGame } from '@/slices/gameSlice';
 import { Form, Button } from 'react-bootstrap';
+import MainContainer from '../main.page/Container';
+import Container from 'react-bootstrap/Container';
 
 const JoinGameForm = () => {
     const { auth } = useAuth();
@@ -36,22 +38,27 @@ const JoinGameForm = () => {
             router.push(`/game/${res.data._id}`);
         },
     });
-    return (auth.token &&
-        <Form onSubmit={formik.handleSubmit} style={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '200px',
-        }}>
-            <label htmlFor='gameId'>Game ID: </label>
-            <input
-                id='gameId'
-                name='gameId'
-                type='text'
-                onChange={formik.handleChange}
-                value={formik.values.gameId}
-            />
-            <Button type='submit'>Join</Button>
-        </Form>
+    return (<MainContainer>
+        {auth.token &&
+            <Form onSubmit={formik.handleSubmit} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '200px',
+            }}>
+                <Container className='d-flex flex-row align-items-center justify-content-center mb-3'>
+                    <label htmlFor='gameId' style={{ flexShrink: 0 }}>Game ID: </label>
+                    <input
+                        id='gameId'
+                        name='gameId'
+                        type='text'
+                        onChange={formik.handleChange}
+                        value={formik.values.gameId}
+                        style={{ marginLeft: '5px' }}
+                    />
+                </Container>
+                <Button type='submit'>Join</Button>
+            </Form>}
+    </MainContainer>
     );
 };
 

@@ -20,6 +20,7 @@ const initialState: GameType = {
         trumpDrawn: false,
         players: [],
         playersPassed: [],
+        allPlayersCanAdd: false,
         table: [],
         gameStarted: false,
         gameFinished: false,

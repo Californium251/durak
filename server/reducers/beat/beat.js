@@ -34,6 +34,7 @@ const beat = (game, data) => {
         data: {
             ...game.data,
             players: updatedPlayers,
+            playersPassed: [],
             table: updatedTable,
         }
     };

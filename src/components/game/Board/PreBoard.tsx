@@ -8,15 +8,33 @@ import axios from 'axios';
 import useAuth from '@/hooks/useAuth';
 import { getGame } from '@/slices/gameSlice';
 import useApi from '@/hooks/useApi';
+import { usePathname } from 'next/navigation';
+import { GameType } from '@/utils/Types';
 
 const PreBoard = () => {
+    const serverUrl = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
+    const path = usePathname();
+    const dispatch = useDispatch()
+    const { token } = useAuth().auth;
+    useEffect(() => {
+        const getGameData = async () => {
+            const id = path.split('/').at(-1);
+            const { data } = await axios.get(`${serverUrl}/get-game`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                params: { id },
+            });
+            dispatch(getGame(data as GameType));
+        };
+        const timeout = setInterval(getGameData, 2000);
+        return () => clearInterval(timeout);
+    }, [dispatch, path, serverUrl, token]);
     const { players } = useSelector((state: RootState) => state.gameSlice.data);
     const { _id } = useSelector((state: RootState) => state.gameSlice);
     const { auth } = useAuth();
     const { initGame } = useApi();
-    const dispatch = useDispatch();
     const roomIsFull = players.every(p => p.user !== null);
-    const serverUrl = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const makeReady = async () => {
         const res = await axios.post(`${serverUrl}/ready`, {
             gameId: _id,

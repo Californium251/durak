@@ -7,6 +7,9 @@ const pass = (game, data) => {
     if (playersPassed.includes(playerId)) {
         return game;
     }
+    if (!game.data.allPlayersCanAdd && playerId === game.data.attackerId.toString()) {
+        game.data.allPlayersCanAdd = true;
+    }
     const updatedPlayersPassed = [...playersPassed, playerId];
     const playersIds = players.map((p) => p.user._id.toString());
     
@@ -19,6 +22,7 @@ const pass = (game, data) => {
                 table: [],
                 players: updatedPlayers.data.players,
                 trumpDrawn: updatedPlayers.data.trumpDrawn,
+                allPlayersCanAdd: false,
                 playersPassed: [],
                 attackerId: updateAttacker(game),
             }

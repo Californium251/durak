@@ -13,7 +13,7 @@ import Transport from "@/utils/Transport"
 import { socket } from "@/utils/socket"
 
 const App: FC = () => {
-    const serverIrl = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
+    const serverUrl = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const transport = new Transport();
     const { token } = useAuth().auth;
     const path = usePathname();
@@ -36,7 +36,7 @@ const App: FC = () => {
         if (!token) return;
         const getGameData = async () => {
             const id = path.split('/').at(-1);
-            const { data } = await axios.get(`${serverIrl}/get-game`, {
+            const { data } = await axios.get(`${serverUrl}/get-game`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },

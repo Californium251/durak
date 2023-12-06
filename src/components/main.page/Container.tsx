@@ -1,14 +1,14 @@
 import React, { FC, PropsWithChildren } from 'react';
+import 'bootstrap/dist/css/bootstrap.css';
+import Container from 'react-bootstrap/Container';
 
-const Container: FC<PropsWithChildren> = ({children}) => {
+
+const MainContainer: FC<PropsWithChildren> = ({ children }) => {
     return (
-        <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-        }}>
+        <Container className="d-flex justify-content-center align-items-center flex-column vh-100">
             {children}
-        </div>
+        </Container>
     );
 };
 
-export default Container;
+export default MainContainer;
