@@ -9,9 +9,7 @@ const joinGame = async (client, payload) => {
         const gamesCollection = db.collection('games');
         const { _id, name } = await usersCollection.findOne({ _id: new ObjectId(userId) });
         const game = await gamesCollection.findOne({ _id: new ObjectId(gameId) });
-        console.log('game', game.data.players);
         const emptyPlayer = game.data.players.find(p => p.user === null)
-        console.log('emptyPlayer', emptyPlayer)
         if (emptyPlayer) {
             emptyPlayer.user = { name, _id };
             await gamesCollection.updateOne(

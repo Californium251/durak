@@ -1,5 +1,5 @@
-const canPlayerAdd = require('../server/reducers/addCard/utils/player/canPlayerAdd');
-const gameState = require('../__fixtures__/testGameState');
+const canPlayerAdd = require('../../../../../server/reducers/addCard/utils/canPlayerAdd');
+const gameState = require('../../../../../__fixtures__/testGameState');
 
 describe('canPlayerAdd', () => {
     it('should return false for anyone except the attacker', () => {

@@ -9,13 +9,14 @@ import useAuth from '@/hooks/useAuth';
 import { getGame } from '@/slices/gameSlice';
 import useApi from '@/hooks/useApi';
 import { usePathname } from 'next/navigation';
-import { GameType } from '@/utils/Types';
+import { GameType, PlayerType } from '@/utils/Types';
 
 const PreBoard = () => {
     const serverUrl = process.env.NEXT_PUBLIC_SOCKET_IO_URL || 'http://localhost:3001';
     const path = usePathname();
     const dispatch = useDispatch()
-    const { token } = useAuth().auth;
+    const { auth } = useAuth();
+    const { token } = auth;
     useEffect(() => {
         const getGameData = async () => {
             const id = path.split('/').at(-1);
@@ -25,14 +26,33 @@ const PreBoard = () => {
                 },
                 params: { id },
             });
-            dispatch(getGame(data as GameType));
+            if (!data.data.players
+                .filter((p: PlayerType) => !!p.user)
+                .map((p: PlayerType) => p.user._id).includes(auth.userId)
+            ) {
+                const res = await axios.post(`${serverUrl}/join-game`,
+                    {
+                        gameId: id,
+                        name: auth.name,
+                        userId: auth.userId,
+                    },
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${auth.token}`,
+                        }
+                    });
+                dispatch(getGame(res.data));
+            } else {
+                dispatch(getGame(data as GameType));
+            }
         };
         const timeout = setInterval(getGameData, 2000);
         return () => clearInterval(timeout);
     }, [dispatch, path, serverUrl, token]);
     const { players } = useSelector((state: RootState) => state.gameSlice.data);
     const { _id } = useSelector((state: RootState) => state.gameSlice);
-    const { auth } = useAuth();
     const { initGame } = useApi();
     const roomIsFull = players.every(p => p.user !== null);
     const makeReady = async () => {

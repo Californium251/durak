@@ -1,10 +1,11 @@
 const updateAttacker = (game) => {
     const { players, attackerId } = game.data;
+    const playingPlayers = players.filter((p) => p.isPlaying);
     const currentAttackerId = players.findIndex((p) => p.user._id.toString() === attackerId);
-    if (currentAttackerId === players.length - 1) {
-        return players[0].user._id.toString();
+    if (game.data.isPickingUp) {
+        return playingPlayers[(currentAttackerId + 2) % playingPlayers.length].user._id.toString();
     }
-    return players[currentAttackerId + 1].user._id.toString();
+    return playingPlayers[(currentAttackerId + 1) % playingPlayers.length].user._id.toString();
 };
 
 module.exports = updateAttacker;

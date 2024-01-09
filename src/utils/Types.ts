@@ -43,9 +43,11 @@ export type GameType = {
 }
 
 export type PlayerType = {
+    playerId?: number,
     cards: CardType[],
     activePlayer?: boolean,
     isReady?: boolean,
+    isPlaying?: boolean,
     user: {
         name: string,
         _id: string,

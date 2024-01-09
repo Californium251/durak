@@ -1,26 +1,14 @@
-const _flatten = require('lodash/flatten');
-const updateHands = require('../pass/utils/updateHands');
+const _flatten = require("lodash/flatten");
+const updateHands = require("../pass/utils/updateHands");
+const getDefender = require("../getDefender");
 
 const pickUp = (game, data) => {
-    const { table, players } = game.data;
-    const { playerId } = data;
-    const cardsToPickUp = _flatten(table);
-    const player = players.find((p) => p.user._id.toString() === playerId);
-    player.cards = [...player.cards, ...cardsToPickUp];
-    const attackersIds = players.filter((p) => p.user._id.toString() !== playerId).map((p) => p.user._id.toString());
-    const updatedAttackers = updateHands(game, attackersIds).data.players;
-    const defenderIndex = players.findIndex((p) => p.user._id.toString() === playerId);
-    const updatedAttackerIndex = (defenderIndex + 1) % players.length;
-    return {
-        ...game,
-        data: {
-            ...game.data,
-            table: [],
-            players: updatedAttackers,
-            allPlayersCanAdd: false,
-            attackerId: players[updatedAttackerIndex].user._id.toString(),
-        }
-    }
-}
+  const playerId = data.playerId;
+  const defender = getDefender(game.data);
+  if (playerId.toString() !== defender.user._id.toString()) {
+    return game;
+  }
+  return { ...game, data: { ...game.data, isPickingUp: true } };
+};
 
 module.exports = pickUp;

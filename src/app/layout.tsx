@@ -20,6 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <title>Durak</title>
+        <link rel="icon" href="/favicon.svg" />
+      </head>
       <body className={inter.className}>
         <ParentContext>
           {children}

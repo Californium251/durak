@@ -9,6 +9,7 @@ const getStartState = (options) => {
                 cards: [],
                 user: i === 0 ? options.user : null,
                 ready: false,
+                isPlaying: true,
             });
         }
         return players;
@@ -24,6 +25,7 @@ const getStartState = (options) => {
             table: [],
             gameStarted: false,
             gameFinished: false,
+            allPlayersCanAdd: false,
         }
     }
 }

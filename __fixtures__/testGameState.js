@@ -90,7 +90,8 @@ const gameState = {
                     name: 'Maxim',
                     _id: '656f2efd0877e56c603a368d'
                 },
-                ready: true
+                ready: true,
+                isPlaying: true,
             },
             {
                 playerId: 1,
@@ -124,7 +125,8 @@ const gameState = {
                     name: 'Nastya',
                     _id: '656f880b6943b16c4ca0b0f5'
                 },
-                ready: true
+                ready: true,
+                isPlaying: true,
             },
             {
                 playerId: 2,
@@ -158,7 +160,8 @@ const gameState = {
                     name: 'Serega',
                     _id: '656f88246943b16c4ca0b0f6'
                 },
-                ready: true
+                ready: true,
+                isPlaying: true,
             },
             {
                 playerId: 3,
@@ -192,7 +195,8 @@ const gameState = {
                     name: 'Diana',
                     _id: '656f88386943b16c4ca0b0f7'
                 },
-                ready: true
+                ready: true,
+                isPlaying: true,
             }
         ],
         playersPassed: [],

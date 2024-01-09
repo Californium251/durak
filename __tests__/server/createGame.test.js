@@ -1,6 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const e = require('express');
-const createGame = require('../server/store/createGame/createGame');
+const createGame = require('../../server/store/createGame/createGame');
 
 describe('createGame', () => {
     beforeAll(async () => {

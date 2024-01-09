@@ -1,5 +1,5 @@
 const beatCard = require('./utils/beatCard');
-const removeCard = require('../addCard/utils/player/removeCard');
+const removeCard = require('../addCard/utils/removeCard');
 const onlyOnePlayerHasCards = require('./utils/onlyOnePlayerHasCards');
 const doesCardBeat = require('./utils/doesCardBeat');
 
@@ -12,6 +12,9 @@ const beat = (game, data) => {
     }
     const updatedTable = beatCard(table, card1, card2, trump);
     const updatedPlayer = removeCard(player, card2);
+    if (updatedPlayer.cards.length === 0 && game.data.cards.length === 0) {
+        updatedPlayer.isPlaying = false;
+    }
     const updatedPlayers = players.map((p) => {
         if (p.user._id.toString() === playerId) {
             return updatedPlayer;

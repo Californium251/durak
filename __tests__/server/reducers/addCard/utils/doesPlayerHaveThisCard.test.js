@@ -1,4 +1,4 @@
-const doesPlayerHaveThisCard = require('../server/reducers/addCard/utils/player/doesPlayerHaveThisCard');
+const doesPlayerHaveThisCard = require('../../../../../server/reducers/addCard/utils/doesPlayerHaveThisCard');
 
 describe('doesPlayerHaveThisCard', () => {
     it('should return true if player has card', () => {

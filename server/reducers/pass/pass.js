@@ -11,20 +11,20 @@ const pass = (game, data) => {
         game.data.allPlayersCanAdd = true;
     }
     const updatedPlayersPassed = [...playersPassed, playerId];
-    const playersIds = players.map((p) => p.user._id.toString());
     
-    if (updatedPlayersPassed.length === players.length - 1) {
-        const updatedPlayers = updateHands(game, playersIds);
+    if (updatedPlayersPassed.length === players.filter((p) => p.isPlaying).length - 1) {
+        const updatedGame = updateHands(game);
         return {
             ...game,
             data: {
                 ...game.data,
                 table: [],
-                players: updatedPlayers.data.players,
-                trumpDrawn: updatedPlayers.data.trumpDrawn,
+                players: updatedGame.data.players,
+                trumpDrawn: updatedGame.data.trumpDrawn,
                 allPlayersCanAdd: false,
                 playersPassed: [],
                 attackerId: updateAttacker(game),
+                isPickingUp: false,
             }
         }
     } 
@@ -32,7 +32,7 @@ const pass = (game, data) => {
         ...game,
         data: {
             ...game.data,
-            playersPassed: updatedPlayersPassed, 
+            playersPassed: updatedPlayersPassed,
         }
     };
 }

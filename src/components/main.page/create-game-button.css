@@ -1,0 +1,23 @@
+.create-game-button {
+  width: 420px;
+  height: 595px;
+  padding: 60px 20px 0;
+  text-decoration: none;
+  background-color: #9747ff;
+  text-align: center;
+  transition: transform 0.5s ease-out;
+}
+
+.button-text {
+  font-family: PPWriter;
+  font-size: 80px;
+  color: #fff;
+  line-height: 0.9;
+}
+
+@media (max-width: 375px) {
+  .create-game-button {
+    font-size: 60px;
+    width: 315px;
+  }
+}

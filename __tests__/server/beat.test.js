@@ -1,4 +1,4 @@
-const beat = require('../server/reducers/beat/beat')
+const beat = require('../../server/reducers/beat/beat')
 
 describe('beat', () => {
     it('should beat a card', () => {
