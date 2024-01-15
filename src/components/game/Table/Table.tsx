@@ -52,7 +52,6 @@ const Table: FC<{
       left: 0,
       right: 0,
     };
-    console.log(playerElement);
     return {
       top: playerPosition?.top - startPositionY,
       left: playerPosition?.left - startPositionX,

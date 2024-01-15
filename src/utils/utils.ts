@@ -29,7 +29,10 @@ export const createFanOfCards = (i: number, arr: CardType[]) => {
   const alphaMax = (getAngleInc(n) * 180) / Math.PI;
   const r = 600;
   const dr = 10;
-  const alphaI = (i: number) => (alphaMax * (2 * i - n + 1)) / (2 * n) / 3;
+  const alphaI = (i: number | undefined) => {
+    if (i === undefined) return 0;
+    return (alphaMax * (2 * i - n + 1)) / (2 * n) / 3;
+  }
   const top = (r / 8) * (1 - Math.cos((alphaI(i) * Math.PI) / 180));
   const left = r * Math.sin(((alphaI(i) / 2) * Math.PI) / 180);
   const dTop = dr * Math.cos((alphaI(i) * Math.PI) / 180);
@@ -43,8 +46,14 @@ export const createFanOfCards = (i: number, arr: CardType[]) => {
   };
 };
 
-
-module.exports = {
-  getDefender,
-  createFanOfCards,
-};
+export function isInside(object1: any, object2: any) {
+    const bounds1 = object1.getBounds();
+    const bounds2 = object2.getBounds();
+  
+    return (
+      bounds1.x > bounds2.x &&
+      bounds1.y > bounds2.y &&
+      bounds1.x + bounds1.width < bounds2.x + bounds2.width &&
+      bounds1.y + bounds1.height < bounds2.y + bounds2.height
+    );
+  }

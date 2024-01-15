@@ -1,8 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { ReduxProvider } from '@/context/reduxProvider'
-import { AuthProvider } from '@/context/AuthContext'
 import ParentContext from '@/context/ParentContext'
 
 

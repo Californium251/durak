@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 export type CardType = {
     suit: string,
     rank: string,
@@ -53,3 +55,11 @@ export type PlayerType = {
         _id: string,
     }
 }
+
+export type PointLike =
+  | { x: number; y: number }
+  | PIXI.Point
+  | PIXI.ObservablePoint
+  | number
+  | [number]
+  | [number, number];

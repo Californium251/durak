@@ -5,10 +5,12 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/slices";
 import PostBoard from "./PostBoard";
 import PreBoard from "./PreBoard";
+import NewBoard from "./NewBoard";
 
 const setBoard = (gameStarted: boolean, gameFinished: boolean) => {
     if (gameStarted && !gameFinished) {
-        return <Board />
+        return <NewBoard />
+        // return <Board />
     }
     if (gameFinished) {
         return <PostBoard />

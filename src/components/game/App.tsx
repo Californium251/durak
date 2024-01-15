@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import BoardLayout from "./Board/BoardLayout";
 import { ApiProvider } from "@/context/ApiContext";
 import { GameType } from "@/utils/Types";
@@ -21,6 +21,7 @@ const App: FC = () => {
   const { auth, logout } = useAuth();
   const path = usePathname();
   const dispatch = useDispatch();
+  
   socket.on("addCard", async (data) => {
     const parsedData = JSON.parse(data);
     dispatch(setPlayerId(parsedData.playerId));

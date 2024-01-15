@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import gameSlice from "./gameSlice";
 import animationSlice from "./animationSlice";
+import uiSlice from "./uiSlice";
 
 const store = configureStore({
   reducer: {
     gameSlice,
     animationSlice,
+    uiSlice,
   },
 });
 

@@ -96,9 +96,7 @@ app.post("/ready", authenticateToken, async (req, res) => {
   }
 });
 
-app.get("/check-auth", authenticateToken, (res, req) => {
-  console.log(res);
-});
+app.get("/check-auth", authenticateToken, (res, req) => {});
 
 const server = http.createServer(app);
 
