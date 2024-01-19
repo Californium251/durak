@@ -13,6 +13,7 @@ import Transport from "@/utils/Transport";
 import { socket } from "@/utils/socket";
 import EnterNameForm from "../create.game/EnterNameForm";
 import { setPlayerId } from "@/slices/animationSlice";
+import { setUserId } from "@/slices/authSlice";
 
 const App: FC = () => {
   const serverUrl =
@@ -68,6 +69,7 @@ const App: FC = () => {
   if (!auth.token) {
     return <EnterNameForm />;
   }
+  dispatch(setUserId(auth.userId));
   return (
     <ApiProvider transport={transport}>
       <BoardLayout />

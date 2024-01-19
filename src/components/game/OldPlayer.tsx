@@ -1,6 +1,6 @@
 "use client";
 import { FC, SetStateAction, Dispatch, useState } from "react";
-import Card from "./Card";
+import Card from "./OldCard";
 import { useSelector } from "react-redux";
 import { RootState } from "../../slices/index";
 import PassButton from "./PassButton";

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { FC } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../slices/index";
-import Card from "./Card";
+import Card from "./OldCard";
 
 const Deck: FC = () => {
   const cards = useSelector((state: RootState) => state.gameSlice.data.cards);

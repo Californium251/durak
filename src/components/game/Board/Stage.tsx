@@ -6,7 +6,7 @@ import { ContextBridge } from "@/context/ContextBridge";
 interface StageProps extends PropsWithChildren<any> {
   width?: number;
   height?: number;
-  options?: { backgroundColor: string };
+  options?: { backgroundColor: number };
 }
 
 const Stage: FC<StageProps> = ({ children, ...props }) => {

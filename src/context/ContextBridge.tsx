@@ -1,9 +1,8 @@
 import React, { FC, PropsWithChildren } from "react";
-import { ReactReduxContext } from "react-redux";
 
 export const ContextBridge: FC<
   PropsWithChildren<{
-    Context: typeof ReactReduxContext;
+    Context: React.Context<any>;
     render: (value: React.ReactElement) => React.ReactElement;
   }>
 > = ({ children, Context, render }) => {

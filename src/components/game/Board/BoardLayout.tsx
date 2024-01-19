@@ -10,7 +10,6 @@ import NewBoard from "./NewBoard";
 const setBoard = (gameStarted: boolean, gameFinished: boolean) => {
     if (gameStarted && !gameFinished) {
         return <NewBoard />
-        // return <Board />
     }
     if (gameFinished) {
         return <PostBoard />

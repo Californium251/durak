@@ -4,20 +4,21 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/slices";
 import useAuth from "@/hooks/useAuth";
 import Stage from "./Stage";
-import NewPlayer from "./NewPlayer";
+import NewPlayer from "./Player";
 import { setPlayersAnchorPoints } from "@/slices/uiSlice";
 import { useDispatch } from "react-redux";
+import Table from "./Table";
+import useApi from "@/hooks/useApi";
 
 const NewBoard = () => {
-  const userId = useAuth().auth.userId;
+  const userId = useAuth().auth.userId || "";
+  const transport = useApi();
   const players = useSelector(
     (state: RootState) => state.gameSlice.data.players
   );
   const playersAnchorPoints = useSelector(
     (state: RootState) => state.uiSlice.playersAnchorPoints
   );
-  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
-  const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
   const dispatch = useDispatch();
   useEffect(() => {
     const handleResize = () => {
@@ -25,7 +26,8 @@ const NewBoard = () => {
       const windowHeight = window.innerHeight;
       dispatch(
         setPlayersAnchorPoints({
-          numberOfPlayers: players.length,
+          playersIds: players.map((p) => p.user._id),
+          userId,
           windowWidth,
           windowHeight,
         })
@@ -33,23 +35,27 @@ const NewBoard = () => {
     };
 
     handleResize();
-
     window.addEventListener("resize", handleResize);
   }, []);
   return (
     <Stage
       width={window.innerWidth}
       height={window.innerHeight}
-      options={{ backgroundColor: "#008B3A" }}
+      options={{ backgroundColor: 0x0000 }}
     >
-      {playersAnchorPoints[0] &&
+      <Table />
+      {playersAnchorPoints[userId] &&
         players.map((player, i) => {
           return (
             <NewPlayer
-              position={[playersAnchorPoints[i].x, playersAnchorPoints[i].y]}
-              angle={playersAnchorPoints[i].angle}
+              position={[
+                playersAnchorPoints[player.user._id].x,
+                playersAnchorPoints[player.user._id].y,
+              ]}
+              angle={playersAnchorPoints[player.user._id].angle}
               key={i}
               playerId={player.user._id}
+              transport={transport}
             />
           );
         })}

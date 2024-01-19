@@ -2,9 +2,8 @@ import { RootState } from "@/slices";
 import React, { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Container, Sprite } from "@pixi/react";
-import { createFanOfCards } from "@/utils/utils";
 import { PointLike } from "@/utils/Types";
-import NewCard from "./NewCard";
+import Card from "./Card/Card";
 import { useDispatch } from "react-redux";
 import { positionCardsInHand } from "@/slices/uiSlice";
 
@@ -12,21 +11,22 @@ const NewPlayer: FC<{
   playerId: string;
   position: PointLike | undefined;
   angle: number;
-}> = ({ playerId, position, angle }) => {
+  transport: any;
+}> = ({ playerId, position, angle, transport }) => {
   const dispatch = useDispatch();
+  const userId = useSelector((state: RootState) => state.authSlice.userId);
   const cards = useSelector(
     (state: RootState) =>
       state.gameSlice.data.players.find((p) => p.user._id === playerId)?.cards
   ) || [];
   useEffect(() => {
-    dispatch(positionCardsInHand({ cards }));
+    dispatch(positionCardsInHand({ cards, areUserCards: userId === playerId }));
   }, [cards]);
   return (
     <Container position={position} angle={angle}>
-      {cards?.map((card, i, cards) => {
-        const coors = createFanOfCards(i, cards);
+      {cards?.map((card, i) => {
         if (card) {
-          return <NewCard card={card} i={i} key={i} />;
+          return <Card card={card} i={i} key={i} playerId={playerId} transport={transport} />;
         }
       })}
     </Container>
