@@ -15,7 +15,7 @@ export type TransportType = {
     pass: (gameId: string, playerId: string) => Promise<any>;
     pickUp: (gameId: string, playerId: string) => Promise<any>;
     addCard: (gameId: string, playerId: string, card: CardType) => Promise<any>;
-    beat: (gameId: string, card1: CardType, card2: CardType, trump: CardType, playerId: string) => Promise<any>;
+    beat: (gameId: string, card1: CardType, card2: CardType, playerId: string) => Promise<any>;
 }
 
 class Transport implements TransportType {
@@ -31,8 +31,8 @@ class Transport implements TransportType {
     addCard = (gameId: string, playerId: string, card: CardType) => {
         return promisify(socket.emit)('addCard', { gameId, playerId, card })
     }
-    beat = (gameId: string, card1: CardType, card2: CardType, trump: CardType, playerId: string) => {
-        return promisify(socket.emit)('beat', { gameId, card1, card2, trump, playerId });
+    beat = (gameId: string, card1: CardType, card2: CardType, playerId: string) => {
+        return promisify(socket.emit)('beat', { gameId, card1, card2, playerId });
     }
 };
 

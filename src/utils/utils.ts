@@ -33,13 +33,13 @@ export const createFanOfCards = (i: number, arr: CardType[]) => {
     if (i === undefined) return 0;
     return (alphaMax * (2 * i - n + 1)) / (2 * n) / 3;
   };
-  const top = (r / 8) * (1 - Math.cos((alphaI(i) * Math.PI) / 180));
-  const left = r * Math.sin(((alphaI(i) / 2) * Math.PI) / 180);
+  const y = (r / 8) * (1 - Math.cos((alphaI(i) * Math.PI) / 180));
+  const x = r * Math.sin(((alphaI(i) / 2) * Math.PI) / 180);
   const dTop = dr * Math.cos((alphaI(i) * Math.PI) / 180);
   const dLeft = dr * Math.sin((alphaI(i) * Math.PI) / 180);
   return {
-    top,
-    left,
+    y,
+    x,
     alphaI,
     dTop,
     dLeft,

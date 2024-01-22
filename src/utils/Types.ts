@@ -64,9 +64,25 @@ export type PointLike =
   | [number]
   | [number, number];
 
-export type TableSettingsType = {
+type DisplayObject = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export type ContainerType = {
   width: number;
   height: number;
   x: number;
   y: number;
+};
+
+export type CardAppearanceType = DisplayObject & {
+  angle: number;
+  dTop: number;
+  dLeft: number;
+  shown: boolean;
+  card: CardType;
+  state: "playersHand" | "board" | "deck" | "opponentsHand";
 };

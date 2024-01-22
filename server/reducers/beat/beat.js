@@ -4,8 +4,8 @@ const onlyOnePlayerHasCards = require('./utils/onlyOnePlayerHasCards');
 const doesCardBeat = require('./utils/doesCardBeat');
 
 const beat = (game, data) => {
-    const { players, table, cards, trumpDrawn } = game.data;
-    const { playerId, card1, card2, trump } = data;
+    const { players, table, cards, trumpDrawn, trump } = game.data;
+    const { playerId, card1, card2 } = data;
     const player = players.find((p) => p.user._id.toString() === playerId);
     if (!doesCardBeat(card1, card2, trump)) {
         return game;

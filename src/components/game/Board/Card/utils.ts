@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { CardType, TableSettingsType } from "@/utils/Types";
+import { CardAppearanceType, CardType, ContainerType } from "@/utils/Types";
 
 interface Draggable extends PIXI.DisplayObject {
   data: PIXI.InteractionData | null;
@@ -7,12 +7,14 @@ interface Draggable extends PIXI.DisplayObject {
 }
 
 export const isInside = (
-  tableSettings: TableSettingsType,
-  left: number,
-  top: number
+  container: ContainerType,
+  x: number,
+  y: number
 ) => {
-  const { width, height, x, y } = tableSettings;
-  return left >= x && left <= x + width && top >= y && top <= y + height;
+  const { width, height } = container;
+  const tableX = container.x;
+  const tableY = container.y;
+  return x >= tableX && x <= tableX + width && y >= tableY && y <= tableY + height;
 };
 
 export const onDragStart = (event: PIXI.InteractionEvent) => {
@@ -26,16 +28,27 @@ export const onDragEnd =
     tableSettings,
     isDefender,
     addCard,
+    beat,
     gameId,
     playerId,
     card,
+    cardsOnTableUi,
+    cardsOnTable,
   }: {
-    tableSettings: TableSettingsType;
+    tableSettings: ContainerType;
     isDefender: boolean;
     addCard: (gameId: string, playerId: string, card: CardType) => void;
+    beat: (
+      gameId: string,
+      card1: CardType,
+      card2: CardType,
+      playerId: string
+    ) => void;
     gameId: string;
     playerId: string;
     card: CardType;
+    cardsOnTableUi: { [key: string]: CardAppearanceType };
+    cardsOnTable: CardType[];
   }) =>
   (event: PIXI.InteractionEvent) => {
     const { x, y } = event.currentTarget.toGlobal(new PIXI.Point(0, 0));
@@ -44,6 +57,16 @@ export const onDragEnd =
       sprite.dragging = false;
       sprite.data = null;
       addCard(gameId, playerId, card);
+    }
+    if (isDefender) {
+      for (const cardOnTable of Object.values(cardsOnTableUi)) {
+        if (isInside(cardOnTable, x, y)) {
+          const sprite = event.currentTarget as Draggable;
+          sprite.dragging = false;
+          sprite.data = null;
+          beat(gameId, cardOnTable.card, card, playerId);
+        }
+      }
     }
   };
 

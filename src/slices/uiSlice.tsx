@@ -1,22 +1,11 @@
 import { CardType } from "@/utils/Types";
 import { createFanOfCards } from "@/utils/utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TableSettingsType } from "@/utils/Types";
+import { ContainerType } from "@/utils/Types";
+import { CardAppearanceType } from "@/utils/Types";
 
 type PlayersAnchorPoints = {
   [index: number]: { x: number; y: number; angle: number };
-};
-
-type CardAppearance = {
-  left: number;
-  top: number;
-  angle: number;
-  dTop: number;
-  dLeft: number;
-  shown: boolean;
-  state: "playersHand" | "board" | "deck" | "opponentsHand";
-  width: number;
-  height: number;
 };
 
 type TableAnchorPoint = {
@@ -30,9 +19,9 @@ const initialState: {
   playersAnchorPoints: PlayersAnchorPoints;
   tableAnchorPoints: TableAnchorPoint[];
   cards: {
-    [cardName: string]: CardAppearance;
+    [cardName: string]: CardAppearanceType;
   };
-  tableSettings: TableSettingsType;
+  tableSettings: ContainerType;
 } = {
   playersAnchorPoints: {},
   tableAnchorPoints: [],
@@ -105,43 +94,6 @@ const uiSlice = createSlice({
           break;
       }
     },
-    setCardPairsAnchorPoints: (
-      state,
-      action: PayloadAction<{
-        cardPairs: CardType[][];
-        tableWidth: number;
-        tableHeight: number;
-      }>
-    ) => {
-      const { cardPairs, tableWidth, tableHeight } = action.payload;
-      switch (cardPairs.length) {
-        case 1:
-        case 2:
-        case 3:
-          console.log(cardPairs, tableWidth, tableHeight);
-          state.tableAnchorPoints = cardPairs.map((cardPair, i) => {
-            return {
-              width: tableWidth / cardPairs.length,
-              height: tableHeight,
-              x: (tableWidth / cardPairs.length) * i,
-              y: tableHeight / 2,
-            };
-          });
-          break;
-        case 4:
-        case 5:
-        case 6:
-          state.tableAnchorPoints = cardPairs.map((cardPair, i) => {
-            return {
-              width: tableWidth / 3,
-              height: tableHeight / 2,
-              x: (tableWidth / 3) * (i % 3),
-              y: tableHeight / 4 + tableHeight / 2 * (i % 3),
-            }
-          })
-          break;
-      }
-    },
     positionCardsInHand: (
       state,
       action: PayloadAction<{ cards: CardType[]; areUserCards: boolean }>
@@ -152,6 +104,7 @@ const uiSlice = createSlice({
           const { alphaI, ...rest } = createFanOfCards(i, cards);
           state.cards[`${card.suit}-${card.rank}`] = {
             ...state.cards[`${card.suit}-${card.rank}`],
+            card,
             angle: alphaI(i),
             ...rest,
             state: areUserCards ? "playersHand" : "opponentsHand",
@@ -159,21 +112,34 @@ const uiSlice = createSlice({
         }
       });
     },
-    positionCardsOnTable: (state, action: PayloadAction<CardType[][]>) => {
-      const cards = action.payload;
+    positionCardsOnTable: (
+      state,
+      action: PayloadAction<{
+        cards: CardType[][];
+        windowWidth: number;
+        windowHeight: number;
+      }>
+    ) => {
+      const { cards, windowWidth, windowHeight } = action.payload;
       cards.forEach((cardPair, i) => {
         cardPair.forEach((card, j) => {
           if (card) {
             state.cards[`${card.suit}-${card.rank}`] = {
               ...state.cards[`${card.suit}-${card.rank}`],
+              card,
               angle: 0,
-              left: 0,
-              top: 0,
+              x: (windowWidth / 2) * ((i + 1) % 3) + j * 20,
+              y:
+                cards.length < 4
+                  ? windowHeight / 2 + j * 20
+                  : windowHeight / 4 +
+                    (windowHeight / 2) * Math.floor(cards.length / 3) +
+                    j * 20,
               state: "board",
             };
           }
         });
-      })
+      });
     },
     showCard: (
       state,
@@ -208,7 +174,6 @@ const uiSlice = createSlice({
 
 export const {
   setPlayersAnchorPoints,
-  setCardPairsAnchorPoints,
   positionCardsInHand,
   positionCardsOnTable,
   showCard,

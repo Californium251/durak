@@ -148,7 +148,7 @@ io.on("connection", (socket) => {
     });
     io.emit("pickUp", updatedGame);
   });
-  socket.on("beat", async ({ gameId, card1, card2, trump, playerId }) => {
+  socket.on("beat", async ({ gameId, card1, card2, playerId }) => {
     const updatedGame = await main("beat", {
       gameId,
       reducer: beat,
@@ -156,7 +156,6 @@ io.on("connection", (socket) => {
         playerId,
         card1,
         card2,
-        trump,
       },
     });
     io.emit("beat", updatedGame);

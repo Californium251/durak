@@ -1,21 +1,16 @@
 import { Container, Graphics, Sprite } from "@pixi/react";
 import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setTable,
-  setCardPairsAnchorPoints,
-  positionCardsOnTable,
-} from "@/slices/uiSlice";
+import { setTable, positionCardsOnTable } from "@/slices/uiSlice";
 import { RootState } from "@/slices";
 import Card from "./Card/Card";
+import _uniqueId from "lodash/uniqueId";
 
-const NewTable = () => {
+const Table = () => {
   const cardsOnTable = useSelector(
     (state: RootState) => state.gameSlice.data.table
   );
-  const tableAnchorPoints = useSelector(
-    (state: RootState) => state.uiSlice.tableAnchorPoints
-  );
+  const cardsUi = useSelector((state: RootState) => state.uiSlice.cards);
   const dispatch = useDispatch();
   const initialTableSettings = {
     width: window.innerWidth * 0.8,
@@ -30,14 +25,14 @@ const NewTable = () => {
     (state: RootState) => state.uiSlice.tableSettings
   );
   useEffect(() => {
+    if (cardsOnTable.length === 0) return;
     dispatch(
-      setCardPairsAnchorPoints({
-        cardPairs: cardsOnTable,
-        tableWidth: tableSettings.width,
-        tableHeight: tableSettings.height,
+      positionCardsOnTable({
+        cards: cardsOnTable,
+        windowWidth: tableSettings.width,
+        windowHeight: tableSettings.height,
       })
     );
-    dispatch(positionCardsOnTable(cardsOnTable));
   }, [tableSettings]);
   const rect = useCallback(
     (g) => {
@@ -54,24 +49,18 @@ const NewTable = () => {
   return (
     <>
       <Graphics draw={rect} />
-      {tableAnchorPoints.map(({ width, height, x, y }, i) => {
-        return (
-          <Container key={i} position={[x, y]} width={width} height={height}>
-            <Sprite
-              image="/cards/clubs-ace.svg"
-              width={100}
-              height={150}
-              x={10}
-              y={10}
-            />
-            {/* {cardsOnTable[i].map((card, j) => {
-              return <Card card={card} key={j} />;
-            })} */}
-          </Container>
-        );
+      {cardsOnTable.map((card, i) => {
+        if (card) {
+          return (
+            <>
+              <Card card={card[0]} key={i} />
+              {card[1] ? <Card card={card[1]} key={`${i}-${2}`} /> : null}
+            </>
+          );
+        }
       })}
     </>
   );
 };
 
-export default NewTable;
+export default Table;
