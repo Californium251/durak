@@ -14,7 +14,7 @@ const Card: FC<{
   i?: number;
   playerId?: string;
   transport?: any;
-}> = ({ card, i, playerId, transport }) => {
+}> = ({ card, playerId, transport }) => {
   const addCard = transport?.addCard;
   const beat = transport?.beat;
   const cardSize = { width: 100, height: 150 };
@@ -26,6 +26,8 @@ const Card: FC<{
   const CardAppearance = useSelector(
     (state: RootState) => state.uiSlice.cards[`${card?.suit}-${card?.rank}`]
   );
+  const [cardX, setCardX] = useState<number>(CardAppearance?.x);
+  const [cardY, setCardY] = useState<number>(CardAppearance?.y);
   const cardsOnTableStrings = useSelector(
     (state: RootState) => state.gameSlice.data.table
   ).map((cardPair) => `${cardPair[0]?.suit}-${cardPair[0]?.rank}`);
@@ -50,8 +52,6 @@ const Card: FC<{
     );
 
   const gameId = useSelector((state: RootState) => state.gameSlice._id);
-  const [cardX, setCardX] = useState<number>(CardAppearance?.x);
-  const [cardY, setCardY] = useState<number>(CardAppearance?.y);
   const [hover, setHover] = useState<boolean>(false);
   const [interactive, setInteractive] = useState<boolean>(false);
   const tickerCouner = useRef<number>(0);
@@ -87,33 +87,30 @@ const Card: FC<{
       dispatch(showCard({ card, shown: true }));
       setInteractive(true);
     }
-  }, [card]);
-  useTick((delta) => {
-    // if (hover && playerId === userId) {
-    //   if (tickerCouner.current < 1) {
-    //     tickerCouner.current += 0.1 * delta;
-    //     setCardX(
-    //       CardAppearance?.x + tickerCouner.current * CardAppearance?.dLeft
-    //     );
-    //     setCardY(
-    //       CardAppearance?.y - tickerCouner.current * CardAppearance?.dTop
-    //     );
-    //   }
-    // } else {
-    //   setCardX(CardAppearance?.x);
-    //   setCardY(CardAppearance?.y);
-    // }
-    
-    if (!hover && Math.abs(CardAppearance?.x - cardX) > 1) {
-      const deltaX = Math.sign(CardAppearance.x - cardX);
-      setCardX(cardX + 0.1 * delta * deltaX * CardAppearance.dLeft);
+  }, [card, CardAppearance?.state]);
+
+  useEffect(() => {
+    if (cardX === undefined || cardY === undefined) {
+      setCardX(CardAppearance?.x);
+      setCardY(CardAppearance?.y);
+    };
+    const animate = () => {
+      const signX = Math.sign(CardAppearance?.x - cardX);
+      const signY = Math.sign(CardAppearance?.y - cardY);
+
+      if (Math.abs(cardX - CardAppearance?.x) < 1) {
+        setCardX(CardAppearance?.x);
+      } else {
+        setCardX(cardX + signX);
+      }
+      if (Math.abs(cardY - CardAppearance?.y) < 1) {
+        setCardY(CardAppearance?.y);
+      } else {
+        setCardY(cardY + signY);
+      }
     }
-    if (!hover && CardAppearance?.y !== cardY) {
-      const deltaY = Math.sign(CardAppearance.y - cardY);
-      setCardY(cardY + 0.1 * delta * deltaY * CardAppearance.dTop);
-    }
-  });
-  if (CardAppearance) {
+  }, [CardAppearance?.x, CardAppearance?.y]);
+  if (CardAppearance && CardAppearance.x && CardAppearance.y) {
     const { width, height, angle } = CardAppearance;
     return (
       <Sprite

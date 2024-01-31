@@ -53,6 +53,7 @@ const PreBoard = () => {
         dispatch(getGame(data as GameType));
       }
     };
+    getGameData();
     const timeout = setInterval(getGameData, 2000);
     return () => clearInterval(timeout);
   }, [dispatch, path, serverUrl, token]);

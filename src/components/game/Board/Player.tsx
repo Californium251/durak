@@ -20,7 +20,7 @@ const NewPlayer: FC<{
       state.gameSlice.data.players.find((p) => p.user._id === playerId)?.cards
   ) || [];
   useEffect(() => {
-    dispatch(positionCardsInHand({ cards, areUserCards: userId === playerId }));
+    dispatch(positionCardsInHand({ cards, userId, playerId }));
   }, [cards]);
   return (
     <Container position={position} angle={angle}>

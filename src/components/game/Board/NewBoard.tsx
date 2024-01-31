@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/slices";
 import useAuth from "@/hooks/useAuth";
 import Stage from "./Stage";
-import NewPlayer from "./Player";
 import { setPlayersAnchorPoints } from "@/slices/uiSlice";
 import { useDispatch } from "react-redux";
 import Table from "./Table";
 import useApi from "@/hooks/useApi";
+import Card from "./Card/Card";
 
 const NewBoard = () => {
   const userId = useAuth().auth.userId || "";
@@ -46,18 +46,16 @@ const NewBoard = () => {
       <Table />
       {playersAnchorPoints[userId] &&
         players.map((player, i) => {
-          return (
-            <NewPlayer
-              position={[
-                playersAnchorPoints[player.user._id].x,
-                playersAnchorPoints[player.user._id].y,
-              ]}
-              angle={playersAnchorPoints[player.user._id].angle}
-              key={i}
-              playerId={player.user._id}
-              transport={transport}
-            />
-          );
+          return player.cards.map((card, j) => {
+            return (
+              <Card
+                card={card}
+                key={`${i}-${j}`}
+                playerId={player.user._id}
+                transport={transport}
+              />
+            );
+          });
         })}
     </Stage>
   );

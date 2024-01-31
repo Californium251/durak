@@ -86,3 +86,8 @@ export type CardAppearanceType = DisplayObject & {
   card: CardType;
   state: "playersHand" | "board" | "deck" | "opponentsHand";
 };
+
+export type StageSettingsType = {
+  width: number;
+  height: number;
+}

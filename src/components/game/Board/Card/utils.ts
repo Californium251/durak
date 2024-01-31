@@ -74,6 +74,7 @@ export const onDragMove = (event: PIXI.InteractionEvent) => {
   const sprite = event.currentTarget as Draggable;
   if (sprite.dragging) {
     const newPosition = sprite.data!.getLocalPosition(sprite.parent);
+    console.log('dragging',newPosition.x, newPosition.y)
     sprite.x = newPosition.x;
     sprite.y = newPosition.y;
   }
