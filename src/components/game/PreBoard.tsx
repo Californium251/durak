@@ -16,46 +16,53 @@ const PreBoard = () => {
     process.env.NEXT_PUBLIC_SOCKET_IO_URL || "http://localhost:3001";
   const path = usePathname();
   const dispatch = useDispatch();
-  const { auth } = useAuth();
+  const { auth, logout } = useAuth();
   const { token } = auth;
   useEffect(() => {
-    const getGameData = async () => {
-      const id = path.split("/").at(-1);
-      const { data } = await axios.get(`${serverUrl}/get-game`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: { id },
-      });
-      if (
-        !data.data.players
-          .filter((p: PlayerType) => !!p.user)
-          .map((p: PlayerType) => p.user._id)
-          .includes(auth.userId)
-      ) {
-        const res = await axios.post(
-          `${serverUrl}/join-game`,
-          {
-            gameId: id,
-            name: auth.name,
-            userId: auth.userId,
-          },
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${auth.token}`,
-            },
+      try {
+          const getGameData = async () => {
+              const id = path.split("/").at(-1);
+              const {data} = await axios.get(`${serverUrl}/get-game`, {
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  },
+                  params: {id},
+              });
+              if (
+                  !data.data.players
+                      .filter((p: PlayerType) => !!p.user)
+                      .map((p: PlayerType) => p.user._id)
+                      .includes(auth.userId)
+              ) {
+                  const res = await axios.post(
+                      `${serverUrl}/join-game`,
+                      {
+                          gameId: id,
+                          name: auth.name,
+                          userId: auth.userId,
+                      },
+                      {
+                          method: "POST",
+                          headers: {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${auth.token}`,
+                          },
+                      }
+                  );
+                  dispatch(getGame(res.data));
+              } else {
+                  dispatch(getGame(data as GameType));
+              }
+          };
+          getGameData();
+          const timeout = setInterval(getGameData, 2000);
+          return () => clearInterval(timeout);
+      } catch (e) {
+          // @ts-ignore
+          if (e instanceof Error && e.request.status === 403) {
+              logout();
           }
-        );
-        dispatch(getGame(res.data));
-      } else {
-        dispatch(getGame(data as GameType));
       }
-    };
-    getGameData();
-    const timeout = setInterval(getGameData, 2000);
-    return () => clearInterval(timeout);
   }, [dispatch, path, serverUrl, token]);
   const { players } = useSelector((state: RootState) => state.gameSlice.data);
   const { _id } = useSelector((state: RootState) => state.gameSlice);

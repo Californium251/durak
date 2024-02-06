@@ -17,7 +17,7 @@ import {
 
 const CreateGameForm = () => {
   const dispatch = useDispatch();
-  const { auth } = useAuth();
+  const { auth, logout } = useAuth();
   const router = useRouter();
   const [numberOfPlayers, setNumberOfPlayers] = useState<number>(2);
   const handleToggleButton = (val: number) => setNumberOfPlayers(val);
@@ -33,23 +33,30 @@ const CreateGameForm = () => {
       isPrivate: false,
     },
     onSubmit: async (values) => {
-      const res = await axios.post(
-        `${serverAddress}/create-game`,
-        {
-          ...values,
-          creator: auth.userId,
-          numberOfPlayers,
-        },
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${auth.token}`,
-          },
+      try {
+        const res = await axios.post(
+            `${serverAddress}/create-game`,
+            {
+              ...values,
+              creator: auth.userId,
+              numberOfPlayers,
+            },
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.token}`,
+              },
+            }
+        );
+        dispatch(createGame(res.data));
+        router.push(`/game/${res.data._id}`);
+      } catch (e) {
+        // @ts-ignore
+        if (e instanceof Error && e.request.status === 403) {
+          logout();
         }
-      );
-      dispatch(createGame(res.data));
-      router.push(`/game/${res.data._id}`);
+      }
     },
   });
   return (
