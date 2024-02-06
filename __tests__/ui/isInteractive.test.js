@@ -1,2 +1,2 @@
-import {isInteractive} from "../../src/components/game/Board/Card/dragAndDrop/validators";
+import {isInteractive} from "../../src/components/game/Card/dragAndDrop/validators";
 

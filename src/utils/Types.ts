@@ -37,6 +37,7 @@ export type GameDataType = {
     gameStarted: boolean;
     attackerId?: string;
     gameFinished: boolean;
+    isPickingUp: boolean;
 };
 
 export type GameType = {

@@ -3,7 +3,7 @@ import React, {FC, useCallback, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/slices";
 import {setTableSize} from '@/slices/uiSlice';
-import Card from "./Card/Card";
+import Card from "@/components/game/Card/Card";
 import Button from "./Button";
 import {GameType} from "@/utils/Types";
 import {TransportType} from "@/utils/Transport";

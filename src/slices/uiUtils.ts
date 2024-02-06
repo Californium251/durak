@@ -244,6 +244,7 @@ export const positionTrump = (playersNumber: number, stageSettings: {
     }
 }
 
+// @ts-ignore
 export const positionCardsInHand: (params: {
     players: PlayerType[], playerId: string, card: CardType, stageSettings: {
         width: number,
@@ -265,7 +266,4 @@ export const positionCardsInHand: (params: {
     } else {
         throw new Error('Cannot find player. Check UISlice getCardCoors action');
     }
-}
-
-export const positionCardInOpponentsHand = () => {
 }

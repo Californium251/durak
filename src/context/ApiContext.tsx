@@ -27,7 +27,9 @@ export function ApiProvider({
   transport: TransportType;
   children: React.ReactNode;
 }) {
+
   return (
+      // @ts-ignore
     <ApiContext.Provider value={transport}>{children}</ApiContext.Provider>
   );
 }

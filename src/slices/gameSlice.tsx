@@ -24,6 +24,7 @@ const initialState: GameType = {
     table: [],
     gameStarted: false,
     gameFinished: false,
+    isPickingUp: false,
   },
 };
 

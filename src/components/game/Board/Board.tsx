@@ -3,13 +3,13 @@ import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/slices";
 import Stage from "./Stage";
-import Card from "./Card/Card";
+import Card from "@/components/game/Card/Card";
 import _flatten from "lodash/flatten";
 import useAuth from "@/hooks/useAuth";
 import Table from "./Table";
 import useApi from "@/hooks/useApi";
 
-const NewBoard = () => {
+const Board = () => {
     const players = _flatten(useSelector((state: RootState) => state.gameSlice.data.players));
     const cards = useSelector((state: RootState) => state.gameSlice.data.cards);
     const trump = useSelector((state: RootState) => state.gameSlice.data.trump);
@@ -31,14 +31,16 @@ const NewBoard = () => {
             <Card key={`${card?.suit}-${card?.rank}`} playerId={userId} card={card} transport={transport}/>))),
         ...cards.map((card) =>
             <Card key={`${card?.suit}-${card?.rank}`} card={card} />)];
+
     return <Stage
         width={stageSize.width}
         height={stageSize.height}
         options={{backgroundColor: 0x0000}}
     >
+        {/*@ts-ignore*/}
         <Table transport={transport} playerId={userId} />
         {allCards}
     </Stage>;
 };
 
-export default NewBoard;
+export default Board;

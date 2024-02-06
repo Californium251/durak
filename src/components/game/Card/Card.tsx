@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "@/slices";
 import {getCardCoors, setCardPosition as setCardPos} from "@/slices/uiSlice"
 import "@pixi/events";
-import {onDragEnd, onDragMove, onDragStart} from "@/components/game/Board/Card/dragAndDrop/events";
+import {onDragEnd, onDragMove, onDragStart} from "@/components/game/Card/dragAndDrop/events";
 
 
 const Card: FC<{
@@ -34,7 +34,7 @@ const Card: FC<{
         return () => window.removeEventListener('resize', handleResize);
     }, [window.innerHeight, window.innerWidth]);
     useEffect(() => {
-        dispatch(getCardCoors({game, card, playerId, stageSettings}))
+        dispatch(getCardCoors({game, card, playerId: playerId || '', stageSettings}))
     }, [card, dispatch, game, playerId, window.innerHeight, window.innerWidth]);
 
     if (!card) throw new Error('No card passed to Card component');

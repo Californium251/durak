@@ -2,13 +2,13 @@
 import {FC} from "react";
 import {useSelector} from "react-redux";
 import {RootState} from "@/slices";
-import PostBoard from "./PostBoard";
-import PreBoard from "./PreBoard";
-import NewBoard from "./NewBoard";
+import PostBoard from "../PostBoard";
+import PreBoard from "../PreBoard";
+import Board from "./Board";
 
 const setBoard = (gameStarted: boolean, gameFinished: boolean) => {
     if (gameStarted && !gameFinished) {
-        return <NewBoard/>;
+        return <Board/>;
     }
     if (gameFinished) {
         return <PostBoard/>;
