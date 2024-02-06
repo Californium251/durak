@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { CardAppearanceType, CardType, ContainerType } from "@/utils/Types";
 
 interface Draggable extends PIXI.DisplayObject {
+  // @ts-ignore
   data: PIXI.InteractionData | null;
   dragging: boolean;
 }
@@ -17,6 +18,7 @@ export const isInside = (
   return x >= tableX && x <= tableX + width && y >= tableY && y <= tableY + height;
 };
 
+// @ts-ignore
 export const onDragStart = (event: PIXI.InteractionEvent) => {
   const sprite = event.currentTarget as Draggable;
   sprite.data = event.data;
@@ -49,7 +51,7 @@ export const onDragEnd =
     card: CardType;
     cardsOnTableUi: { [key: string]: CardAppearanceType };
     cardsOnTable: CardType[];
-  }) =>
+  }) => // @ts-ignore
   (event: PIXI.InteractionEvent) => {
     const { x, y } = event.currentTarget.toGlobal(new PIXI.Point(0, 0));
     if (isInside(tableSettings, x, y) && !isDefender) {
@@ -70,11 +72,11 @@ export const onDragEnd =
     }
   };
 
+// @ts-ignore
 export const onDragMove = (event: PIXI.InteractionEvent) => {
   const sprite = event.currentTarget as Draggable;
   if (sprite.dragging) {
     const newPosition = sprite.data!.getLocalPosition(sprite.parent);
-    console.log('dragging',newPosition.x, newPosition.y)
     sprite.x = newPosition.x;
     sprite.y = newPosition.y;
   }

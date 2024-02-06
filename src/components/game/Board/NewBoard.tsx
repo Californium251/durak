@@ -1,64 +1,44 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "@/slices";
-import useAuth from "@/hooks/useAuth";
+import React, {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "@/slices";
 import Stage from "./Stage";
-import { setPlayersAnchorPoints } from "@/slices/uiSlice";
-import { useDispatch } from "react-redux";
+import Card from "./Card/Card";
+import _flatten from "lodash/flatten";
+import useAuth from "@/hooks/useAuth";
 import Table from "./Table";
 import useApi from "@/hooks/useApi";
-import Card from "./Card/Card";
 
 const NewBoard = () => {
-  const userId = useAuth().auth.userId || "";
-  const transport = useApi();
-  const players = useSelector(
-    (state: RootState) => state.gameSlice.data.players
-  );
-  const playersAnchorPoints = useSelector(
-    (state: RootState) => state.uiSlice.playersAnchorPoints
-  );
-  const dispatch = useDispatch();
-  useEffect(() => {
-    const handleResize = () => {
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      dispatch(
-        setPlayersAnchorPoints({
-          playersIds: players.map((p) => p.user._id),
-          userId,
-          windowWidth,
-          windowHeight,
-        })
-      );
-    };
+    const players = _flatten(useSelector((state: RootState) => state.gameSlice.data.players));
+    const cards = useSelector((state: RootState) => state.gameSlice.data.cards);
+    const trump = useSelector((state: RootState) => state.gameSlice.data.trump);
+    const [stageSize, setStageSize] = useState({width: window.innerWidth, height: window.innerHeight})
+    useEffect(() => {
+        const handleResize = () => {
+            setStageSize({width: window.innerWidth, height: window.innerHeight})
+        }
+        window.addEventListener('resize', handleResize);
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
-  }, []);
-  return (
-    <Stage
-      width={window.innerWidth}
-      height={window.innerHeight}
-      options={{ backgroundColor: 0x0000 }}
+        return () => window.removeEventListener('resize', handleResize);
+    }, [window.innerHeight, window.innerWidth]);
+    const transport = useApi();
+    const {auth: {userId}} = useAuth();
+    if (!userId) throw new Error('This user doesn\'t exist or don\'t participate this game.');
+    const allCards = [
+        <Card key={`${trump?.suit}-${trump?.rank}`} card={trump} />,
+        ..._flatten(players.map((p) => p.cards.map((card) =>
+            <Card key={`${card?.suit}-${card?.rank}`} playerId={userId} card={card} transport={transport}/>))),
+        ...cards.map((card) =>
+            <Card key={`${card?.suit}-${card?.rank}`} card={card} />)];
+    return <Stage
+        width={stageSize.width}
+        height={stageSize.height}
+        options={{backgroundColor: 0x0000}}
     >
-      <Table />
-      {playersAnchorPoints[userId] &&
-        players.map((player, i) => {
-          return player.cards.map((card, j) => {
-            return (
-              <Card
-                card={card}
-                key={`${i}-${j}`}
-                playerId={player.user._id}
-                transport={transport}
-              />
-            );
-          });
-        })}
-    </Stage>
-  );
+        <Table transport={transport} playerId={userId} />
+        {allCards}
+    </Stage>;
 };
 
 export default NewBoard;

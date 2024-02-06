@@ -43,6 +43,7 @@ export const createFanOfCards = (i: number, arr: CardType[]) => {
         alphaI,
         dTop,
         dLeft,
+        zIndex: i,
     };
 };
 
