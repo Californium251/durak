@@ -46,11 +46,12 @@ const Card: FC<{
         }))
     }, [card, dispatch, game, playerId, window.innerHeight, window.innerWidth]);
     const table = useSelector((state: RootState) => state.uiSlice.tableSettings);// Вот это конечно нужно переписать, чтобы данные о размере стола находились в состоянии
-    const [cardPosition, setCardPosition] = useState({x: 0, y: 0})
+    const [cardPosition, setCardPosition] = useState({x: 0, y: 0, zIndex: 0})
+    const [isInteractive, setIsInteractive] = useState<boolean>(true);
     const [icp, setIcp] = useState(cardPosition);
-    const setCardCoorsInReduxAndLocal = (card: CardType) => (x: number, y: number) => {
-        dispatch(setCardPos({card, x, y}));
-        setCardPosition({x, y})
+    const setCardCoorsInReduxAndLocal = (card: CardType) => (x: number, y: number, zIndex: number) => {
+        dispatch(setCardPos({card, x, y, zIndex}));
+        setCardPosition({x, y, zIndex})
     };
 
     const dndParams = {
@@ -69,20 +70,23 @@ const Card: FC<{
     const firstRender = useRef(true);
     useEffect(() => {
         if (firstRender.current && cardCoors) {
-            setCardPosition({x: cardCoors.x, y: cardCoors.y});
-            setIcp({x: cardCoors.x, y: cardCoors.y});
+            setCardPosition({...cardCoors, x: cardCoors.x, y: cardCoors.y});
+            setIcp({...cardCoors, x: cardCoors.x, y: cardCoors.y});
             firstRender.current = false;
         }
     }, [cardCoors]);
     useTick((delta) => {
-        if (cardCoors.x !== cardPosition.x) {
+        if (cardCoors.x !== cardPosition.x || cardCoors.y !== cardPosition.y) {
+            setIsInteractive(false);
             const dx = cardCoors.x - cardPosition.x;
             const dy = cardCoors.y - cardPosition.y;
             if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
-                setCardPosition({x: cardCoors.x, y: cardCoors.y});
+                setCardPosition({...cardCoors, x: cardCoors.x, y: cardCoors.y});
                 setIcp(cardPosition);
+                setIsInteractive(true);
             } else {
                 setCardPosition({
+                    ...cardCoors,
                     x: cardPosition.x + delta * 0.05 * dx,
                     y: cardPosition.y + delta * 0.05 * dy,
                 });
@@ -90,7 +94,7 @@ const Card: FC<{
         }
     })
     if (cardCoors) {
-        const {x, y, shown, angle} = cardCoors;
+        const {x, y, shown, angle, zIndex, width, height} = cardCoors;
         return (
             <Sprite
                 image={
@@ -98,14 +102,14 @@ const Card: FC<{
                         ? `/cards/${card?.suit}-${card?.rank}.svg`
                         : "/deck.svg"
                 }
-                width={150}
-                height={200}
+                width={width}
+                height={height}
                 x={cardPosition.x}
                 y={cardPosition.y}
-                zIndex={cardCoors?.zIndex}
+                zIndex={zIndex}
                 angle={cardCoors?.angle || 0}
                 anchor={{x: 0.5, y: 0.5}}
-                interactive={true}
+                interactive={isInteractive}
                 {...dnd}
             />
         );

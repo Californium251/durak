@@ -2,15 +2,14 @@ import {CardAppearanceType, CardType} from "@/utils/Types";
 import {TransportType} from "@/utils/Transport";
 import {setCardPosition} from "@/slices/uiSlice";
 
-export const returnCard = (cardCoors: { x: number, y: number }, sprite: {
+export const returnCard = (cardCoors: { x: number, y: number, zIndex: number }, sprite: {
     x: number;
     y: number;
     angle: number;
-}, setCardPosition: (x: number, y: number) => void) => {
+}, setCardPosition: (x: number, y: number, zIndex: number) => void) => {
     sprite.x = cardCoors.x;
     sprite.y = cardCoors.y;
-    // sprite.angle = cardCoors.angle;
-    setCardPosition(cardCoors.x, cardCoors.y);
+    setCardPosition(cardCoors.x, cardCoors.y, cardCoors.zIndex);
 }
 
 export const performAction = async (params: {

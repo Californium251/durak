@@ -40,7 +40,7 @@ export const isPlacedOnUnbeatenCard = (params: {
     }, uiState: uiStateType, gameState: GameDataType
 }): {status: boolean, cardToBeat?: CardType} => {
     const {card, cardCoors, uiState, gameState} = params;
-    const cardsToBeat: CardType[] = gameState.table.map((cp) => cp[0]);
+    const cardsToBeat: CardType[] = gameState.table.filter((cardPair) => cardPair.length === 1).map((cp) => cp[0]);
     for (const cardToBeat of cardsToBeat) {
         if (!cardToBeat) throw new Error('Something gone wrong. Check isPlacingOnAnotherCard func');
         const cardUi = uiState[`${cardToBeat.suit}-${cardToBeat.rank}`]

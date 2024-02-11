@@ -58,8 +58,8 @@ const Table: FC<{
             <Graphics draw={rect}/>
             {cardsOnTable && cardsOnTable.map(([card1, card2]) => {
                 return <>
-                    {card1 && <Card card={card1}/>}
-                    {card2 && <Card card={card2}/>}
+                    {card1 && <Card card={card1} key={`${card1.suit}-${card1.rank}`}/>}
+                    {card2 && <Card card={card2} key={`${card2.suit}-${card2.rank}`}/>}
                 </>
             })}
             <Button transport={transport} playerId={playerId}/>

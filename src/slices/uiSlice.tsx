@@ -170,11 +170,15 @@ const uiSlice = createSlice({
         setCardPosition: (state, action: PayloadAction<{
             card: CardType,
             x: number,
-            y: number
+            y: number,
+            zIndex: number,
         }>) => {
-            const {card, x, y} = action.payload;
-            if (!card?.suit || !card?.rank) throw new Error('No suit or no rank of the card. Card is possibly undefined');
-            state.cards[`${card.suit}-${card.rank}`] = {...state.cards[`${card.suit}-${card.rank}`], x, y}
+            const {card, x, y, zIndex} = action.payload;
+            if (!card?.suit || !card?.rank) {
+                console.log(card);
+                throw new Error('No suit or no rank of the card. Card is possibly undefined')
+            };
+            state.cards[`${card.suit}-${card.rank}`] = {...state.cards[`${card.suit}-${card.rank}`], x, y, zIndex}
         }
     },
 });

@@ -117,6 +117,6 @@ export type DragAndDropParams = {
     card: CardType;
     uiState: uiStateType;
     transport: TransportType;
-    setCardPosition: (x: number, y: number) => void,
-    initialCardPosition: { x: number, y: number }
+    setCardPosition: (x: number, y: number, zIndex: number) => void,
+    initialCardPosition: { x: number, y: number, zIndex: number }
 }

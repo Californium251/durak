@@ -45,15 +45,18 @@ export const isPlaceable = (params: {
     } = params;
     const role = getRole(gameState, playerId);
     if (!isPlacingOnTable(cardCoors, table)) return {isAcceptable: false};
-    if (role === 'attacker' && isCardAllowed(gameState, card)) {
-        return {isAcceptable: true, actionType: 'add', card}
+    if (role === 'attacker') {
+        if (isCardAllowed(gameState, card)) {
+            return {isAcceptable: true, actionType: 'add', card}
+        } else {
+            return {isAcceptable: false}
+        }
     }
     if (role === 'adder' && gameState.allPlayersCanAdd && isCardAllowed(gameState, card)) {
         return {isAcceptable: true, actionType: 'add', card}
     }
     if (role === 'defender') {
         const {status, cardToBeat} = isPlacedOnUnbeatenCard({card, cardCoors, uiState, gameState})
-        console.log(status)
         if (!status) return {isAcceptable: false}
         return {isAcceptable: true, actionType: 'beat', card1: cardToBeat, card2: card}
     }
